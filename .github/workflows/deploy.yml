@@ -1,4 +1,4 @@
-name: Deploy
+name: VDoc
 on:
   push:
     branches:
@@ -14,9 +14,17 @@ jobs:
       run: |
         mkdir mdbook
         curl -sSL https://github.com/rust-lang/mdBook/releases/download/v0.4.14/mdbook-v0.4.14-x86_64-unknown-linux-gnu.tar.gz | tar -xz --directory=./mdbook
-        echo `pwd`/mdbook >> $GITHUB_PATH
-    - name: Deploy GitHub Pages
+        echo `pwd`/mdbook >> $GITHUB_PATH        
+    - name: Install v
       run: |
+        cd /tmp
+        git clone --depth 1 https://github.com/vlang/v
+        cd v
+        make
+        echo `pwd` >> $GITHUB_PATH
+    - name: Generate V Docs
+      run: |
+        v doc v -f md  -no-timestamp -comments -o docs/src/v
         cd docs
         mdbook build
         git worktree add gh-pages
@@ -29,4 +37,4 @@ jobs:
         mv ../book/* .
         git add .
         git commit -m "Deploy $GITHUB_SHA to gh-pages"
-        git push --force --set-upstream origin gh-pages
+        git push --force --set-upstream origin gh-pages        
