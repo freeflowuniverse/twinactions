@@ -2,6 +2,9 @@
 
 implements set of actions to be called over websockets, which run on behalf of caller
 
+see the documentaiton on
+
+> https://freeflowuniverse.github.io/twinactions/
 
 ## Build Status
 
