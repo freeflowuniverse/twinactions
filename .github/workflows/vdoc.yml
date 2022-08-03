@@ -1,4 +1,4 @@
-name: Deploy
+name: VDoc
 on:
   push:
     branches:
