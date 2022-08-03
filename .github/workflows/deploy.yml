@@ -10,6 +10,11 @@ jobs:
     - uses: actions/checkout@v2
       with:
         fetch-depth: 0
+    - name: Install mdbook
+      run: |
+        mkdir mdbook
+        curl -sSL https://github.com/rust-lang/mdBook/releases/download/v0.4.14/mdbook-v0.4.14-x86_64-unknown-linux-gnu.tar.gz | tar -xz --directory=./mdbook
+        echo `pwd`/mdbook >> $GITHUB_PATH        
     - name: Install v
       run: |
         cd /tmp
@@ -21,18 +26,12 @@ jobs:
       run: |
         v doc twinactions/ -f md  -no-timestamp -comments -o docs/src/v
         cd docs
+        mdbook build
     - uses: EndBug/add-and-commit@v9
       with:
-        default_author: github_actions        
-    - name: Install mdbook
-      run: |
-        mkdir mdbook
-        curl -sSL https://github.com/rust-lang/mdBook/releases/download/v0.4.14/mdbook-v0.4.14-x86_64-unknown-linux-gnu.tar.gz | tar -xz --directory=./mdbook
-        echo `pwd`/mdbook >> $GITHUB_PATH        
+        default_author: github_actions    
     - name: Generate MDBOOK
       run: |
-        cd docs
-        mdbook build
         git worktree add gh-pages
         git config user.name "Deploy from CI"
         git config user.email ""
