@@ -25,7 +25,7 @@ jobs:
     - name: Generate V Docs
       run: |
         ls
-        v doc twinactions -f md  -no-timestamp -comments -o docs/src/v
+        v doc twinactions/ -f md  -no-timestamp -comments -o docs/src/v
         cd docs
         mdbook build
         git worktree add gh-pages
