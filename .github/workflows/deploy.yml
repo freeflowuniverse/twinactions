@@ -24,7 +24,8 @@ jobs:
         echo `pwd` >> $GITHUB_PATH
     - name: Generate V Docs
       run: |
-        v doc v -f md  -no-timestamp -comments -o docs/src/v
+        ls
+        v doc twinactions -f md  -no-timestamp -comments -o docs/src/v
         cd docs
         mdbook build
         git worktree add gh-pages
