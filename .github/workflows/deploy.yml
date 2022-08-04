@@ -25,18 +25,18 @@ jobs:
         make
         echo `pwd` >> $GITHUB_PATH
         popd
-    - name: Generate V Docs
-      run: |
-        # v doc twinactions/ -f md  -no-timestamp -comments -o docs/src/v
-        bash doc.sh
+    # - name: Generate V Docs
+    #   run: |
+    #     # v doc twinactions/ -f md  -no-timestamp -comments -o docs/src/v
     # - uses: EndBug/add-and-commit@v9
     #   with:
     #     default_author: github_actions    
     - name: Generate MDBOOK
       run: |
-        v doc twinactions/ -f md  -no-timestamp -comments -o docs/src/v
-        cd docs
-        mdbook build      
+        # v doc twinactions/ -f md  -no-timestamp -comments -o docs/src/v
+        bash doc.sh
+        # cd docs
+        # mdbook build      
         git worktree add gh-pages
         git config user.name "Deploy from CI"
         git config user.email ""
@@ -44,7 +44,7 @@ jobs:
         # Delete the ref to avoid keeping history.
         git update-ref -d refs/heads/gh-pages
         rm -rf *
-        mv ../book/* .
+        mv ../html/* .
         git add .
         git commit -m "Deploy $GITHUB_SHA to gh-pages"
         git push --force --set-upstream origin gh-pages        

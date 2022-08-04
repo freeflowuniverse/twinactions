@@ -21,3 +21,4 @@ go.sum
 generated_go/
 generated_rust/
 
+mdbook/
