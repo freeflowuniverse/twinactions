@@ -7,44 +7,43 @@
 
 ## Contents
 - [account_delete](#account_delete)
-- [account_init](#account_init)
-- [account_select](#account_select)
-- [asset_burn](#asset_burn)
 - [asset_create](#asset_create)
 - [asset_delete](#asset_delete)
-- [asset_mint](#asset_mint)
 - [buy](#buy)
+- [info](#info)
+- [asset_mint](#asset_mint)
+- [orderbook_info](#orderbook_info)
 - [defi_pool_deposit](#defi_pool_deposit)
 - [defi_pool_info](#defi_pool_info)
 - [defi_pool_withdraw](#defi_pool_withdraw)
-- [defi_pool_withdraw_all](#defi_pool_withdraw_all)
-- [info](#info)
-- [orderbook_info](#orderbook_info)
 - [sell](#sell)
+- [defi_pool_withdraw_all](#defi_pool_withdraw_all)
 - [send](#send)
+- [account_init](#account_init)
 - [trade_delete](#trade_delete)
 - [trade_delete_all](#trade_delete_all)
 - [trade_info](#trade_info)
-- [OrderBookInfoPair](#OrderBookInfoPair)
-- [DefiPoolDepositArgs](#DefiPoolDepositArgs)
-- [DefiPoolIdentity](#DefiPoolIdentity)
-- [DefiPoolInfo](#DefiPoolInfo)
+- [asset_burn](#asset_burn)
+- [SellActionArg](#SellActionArg)
+- [SendArgs](#SendArgs)
+- [TradeInfoPair](#TradeInfoPair)
 - [AccountArgs](#AccountArgs)
 - [AccountAsset](#AccountAsset)
 - [AccountInfo](#AccountInfo)
-- [DefiPoolInfoPairInfo](#DefiPoolInfoPairInfo)
-- [DefiPoolWithDrawArgs](#DefiPoolWithDrawArgs)
-- [SellActionArg](#SellActionArg)
-- [MultiSig](#MultiSig)
 - [AssetBurnArgs](#AssetBurnArgs)
 - [AssetCreateArgs](#AssetCreateArgs)
 - [AssetDeleteArgs](#AssetDeleteArgs)
 - [AssetMintArgs](#AssetMintArgs)
-- [TradeInfoPair](#TradeInfoPair)
 - [BuyActionArg](#BuyActionArg)
+- [DefiPoolDepositArgs](#DefiPoolDepositArgs)
+- [DefiPoolIdentity](#DefiPoolIdentity)
+- [DefiPoolInfo](#DefiPoolInfo)
+- [DefiPoolInfoPairInfo](#DefiPoolInfoPairInfo)
+- [DefiPoolWithDrawArgs](#DefiPoolWithDrawArgs)
+- [MultiSig](#MultiSig)
 - [OrderBookInfo](#OrderBookInfo)
 - [OrderBookInfoArgs](#OrderBookInfoArgs)
-- [SendArgs](#SendArgs)
+- [OrderBookInfoPair](#OrderBookInfoPair)
 
 ## account_delete
 ```v
@@ -52,33 +51,6 @@ fn account_delete(name string) ?
 ```
 
 delete account on the handler in case it was already initialized, does not give error if not active yet if multisignature more than one will have to do
-
-[[Return to contents]](#Contents)
-
-## account_init
-```v
-fn account_init(args AccountArgs)
-```
-
-init the account on the action handler will give error if it already exists and mneomonic or type different will also give error if an error to create it e.g. wrong mnemonic the account will be selected, which means all actions done after are done on this account
-
-[[Return to contents]](#Contents)
-
-## account_select
-```v
-fn account_select(name string)
-```
-
-the account will be selected, which means all actions done after are done on this account
-
-[[Return to contents]](#Contents)
-
-## asset_burn
-```v
-fn asset_burn(args AssetBurnArgs)
-```
-
-destroy some of the tokens of the asset multisignature is used when asset was multisignature
 
 [[Return to contents]](#Contents)
 
@@ -99,15 +71,6 @@ deletes the asset, checks the multisignature approach
 
 [[Return to contents]](#Contents)
 
-## asset_mint
-```v
-fn asset_mint(args AssetMintArgs)
-```
-
-mint amount of tokens of the asset multisignature is used when asset was multisignature
-
-[[Return to contents]](#Contents)
-
 ## buy
 ```v
 fn buy(args BuyActionArg) ?string
@@ -125,6 +88,44 @@ pub struct BuyActionArg {
 }
 ```
 
+
+[[Return to contents]](#Contents)
+
+## info
+```v
+fn info(name string) ?AccountInfo
+```
+
+return info about your account, the name is the name of the account as used in .account_init() the info returned
+```v
+pub struct AccountInfo {
+	pubkey_bin     []u8 // binary form of key
+	pubkey_ed25519 ed25519.PublicKey // can be empty, if not same type, but often it is
+	assets         []Asset
+}
+pub struct AccountAsset {
+	amount   f64
+	currency string // always lowercase
+}
+```
+
+[[Return to contents]](#Contents)
+
+## asset_mint
+```v
+fn asset_mint(args AssetMintArgs)
+```
+
+mint amount of tokens of the asset multisignature is used when asset was multisignature
+
+[[Return to contents]](#Contents)
+
+## orderbook_info
+```v
+fn orderbook_info(account string, args OrderBookInfoArgs) ?string
+```
+
+returns all relevant info from an orderbook
 
 [[Return to contents]](#Contents)
 
@@ -157,44 +158,6 @@ withdraw money from the pool need to specify which currency and amount per curre
 
 [[Return to contents]](#Contents)
 
-## defi_pool_withdraw_all
-```v
-fn defi_pool_withdraw_all(account string, args DefiPoolIdentity) ?
-```
-
-withdraw money from the pool, do the maximum the purpose is to get all your money out from the pool the handler need to implement the logic to take all out
-
-[[Return to contents]](#Contents)
-
-## info
-```v
-fn info(name string) ?AccountInfo
-```
-
-return info about your account, the name is the name of the account as used in .account_init() the info returned
-```v
-pub struct AccountInfo {
-	pubkey_bin     []u8 // binary form of key
-	pubkey_ed25519 ed25519.PublicKey // can be empty, if not same type, but often it is
-	assets         []Asset
-}
-pub struct AccountAsset {
-	amount   f64
-	currency string // always lowercase
-}
-```
-
-[[Return to contents]](#Contents)
-
-## orderbook_info
-```v
-fn orderbook_info(account string, args OrderBookInfoArgs) ?string
-```
-
-returns all relevant info from an orderbook
-
-[[Return to contents]](#Contents)
-
 ## sell
 ```v
 fn sell(args SellActionArg) ?string
@@ -215,6 +178,15 @@ pub struct SellActionArg {
 
 [[Return to contents]](#Contents)
 
+## defi_pool_withdraw_all
+```v
+fn defi_pool_withdraw_all(account string, args DefiPoolIdentity) ?
+```
+
+withdraw money from the pool, do the maximum the purpose is to get all your money out from the pool the handler need to implement the logic to take all out
+
+[[Return to contents]](#Contents)
+
 ## send
 ```v
 fn send(args SendArgs) ?
@@ -230,6 +202,15 @@ SendArgs {
 		currency string
 }
 ``` multisig is supported, if account is multisig, the the needed needs to be done
+
+[[Return to contents]](#Contents)
+
+## account_init
+```v
+fn account_init(args AccountArgs)
+```
+
+init the account on the action handler will give error if it already exists and mneomonic or type different will also give error if an error to create it e.g. wrong mnemonic the account will be selected, which means all actions done after are done on this account
 
 [[Return to contents]](#Contents)
 
@@ -260,52 +241,49 @@ returns all relevant info from an orderbook uid is uid4, and as given by sales/b
 
 [[Return to contents]](#Contents)
 
-## OrderBookInfoPair
+## asset_burn
 ```v
-struct OrderBookInfoPair {
+fn asset_burn(args AssetBurnArgs)
+```
+
+destroy some of the tokens of the asset multisignature is used when asset was multisignature
+
+[[Return to contents]](#Contents)
+
+## SellActionArg
+```v
+struct SellActionArg {
+	account            string
+	asset_sell         string // the asset you want to sell
+	min_price_usd      f64    // min price your want to sell for always in USDC
+	expirationtime_min u16    // max time in minutes, the trade stays open
+	memo               string // per type blockchain we need to check that memo field is not too long, is not everywhere used
+}
+```
+
+
+[[Return to contents]](#Contents)
+
+## SendArgs
+```v
+struct SendArgs {
+	account  string // the account we are sending info from
+	to       string
+	amount   f64
+	currency string
+	memo     string // per type blockchain we need to check that memo field is not too long
+}
+```
+
+
+[[Return to contents]](#Contents)
+
+## TradeInfoPair
+```v
+struct TradeInfoPair {
 pub mut:
-	currency1 string
 	// TODO specify	
-}
-```
-
-
-[[Return to contents]](#Contents)
-
-## DefiPoolDepositArgs
-```v
-struct DefiPoolDepositArgs {
-	poolasset1 string // a pool has 2 assets, this is the first one
-	amount1    f64
-	currency1  string
-	poolasset2 string // a pool has 2 assets, this is the first one
-	amount2    f64
-	currency2  string
-	memo       string // per type blockchain we need to check that memo field is not too long, is not everywhere used
-}
-```
-
-set of arguments to create, or add to a DEFIPool this is for an AMM DEFI pool (Automatic Market Making DEFI Pool)
-
-[[Return to contents]](#Contents)
-
-## DefiPoolIdentity
-```v
-struct DefiPoolIdentity {
-	poolasset1 string // a pool has 2 assets, this is the first one
-	poolasset2 string
-}
-```
-
-identify a pool, is unique, the order of asset 1 or 2 does not matter
-
-[[Return to contents]](#Contents)
-
-## DefiPoolInfo
-```v
-struct DefiPoolInfo {
-	pairs []DefiPoolInfoPairInfo // is always 2, need to check this is correct
-	// TODO what else is important here?
+	state TradeState
 }
 ```
 
@@ -344,61 +322,6 @@ struct AccountInfo {
 	pubkey_bin     []u8 // binary form of key
 	pubkey_ed25519 ed25519.PublicKey // can be empty, if not same type, but often it is
 	assets         []Asset
-}
-```
-
-
-[[Return to contents]](#Contents)
-
-## DefiPoolInfoPairInfo
-```v
-struct DefiPoolInfoPairInfo {
-	currency string
-	amount   f64
-	// TODO what else is important here?
-}
-```
-
-
-[[Return to contents]](#Contents)
-
-## DefiPoolWithDrawArgs
-```v
-struct DefiPoolWithDrawArgs {
-	poolasset1 string // a pool has 2 assets, this is the first one
-	amount1    f64
-	currency1  string
-	poolasset2 string // a pool has 2 assets, this is the first one
-	amount2    f64
-	currency2  string
-	memo       string // per type blockchain we need to check that memo field is not too long, is not everywhere used
-}
-```
-
-withdraw money from the pool need to specify which currency and amount per currency
-
-[[Return to contents]](#Contents)
-
-## SellActionArg
-```v
-struct SellActionArg {
-	account            string
-	asset_sell         string // the asset you want to sell
-	min_price_usd      f64    // min price your want to sell for always in USDC
-	expirationtime_min u16    // max time in minutes, the trade stays open
-	memo               string // per type blockchain we need to check that memo field is not too long, is not everywhere used
-}
-```
-
-
-[[Return to contents]](#Contents)
-
-## MultiSig
-```v
-struct MultiSig {
-pub:
-	pubkeys       []string // the pubkeys of who needs to sign
-	min_signature i16      // how many need minimally to sign
 }
 ```
 
@@ -457,18 +380,6 @@ pub:
 
 [[Return to contents]](#Contents)
 
-## TradeInfoPair
-```v
-struct TradeInfoPair {
-pub mut:
-	// TODO specify	
-	state TradeState
-}
-```
-
-
-[[Return to contents]](#Contents)
-
 ## BuyActionArg
 ```v
 struct BuyActionArg {
@@ -478,6 +389,87 @@ struct BuyActionArg {
 	expirationtime_min u16    // max time in minutes, the trade stays open
 	memo               string // per type blockchain we need to check that memo field
 	// is not too long, is not everywhere used
+}
+```
+
+
+[[Return to contents]](#Contents)
+
+## DefiPoolDepositArgs
+```v
+struct DefiPoolDepositArgs {
+	poolasset1 string // a pool has 2 assets, this is the first one
+	amount1    f64
+	currency1  string
+	poolasset2 string // a pool has 2 assets, this is the first one
+	amount2    f64
+	currency2  string
+	memo       string // per type blockchain we need to check that memo field is not too long, is not everywhere used
+}
+```
+
+set of arguments to create, or add to a DEFIPool this is for an AMM DEFI pool (Automatic Market Making DEFI Pool)
+
+[[Return to contents]](#Contents)
+
+## DefiPoolIdentity
+```v
+struct DefiPoolIdentity {
+	poolasset1 string // a pool has 2 assets, this is the first one
+	poolasset2 string
+}
+```
+
+identify a pool, is unique, the order of asset 1 or 2 does not matter
+
+[[Return to contents]](#Contents)
+
+## DefiPoolInfo
+```v
+struct DefiPoolInfo {
+	pairs []DefiPoolInfoPairInfo // is always 2, need to check this is correct
+	// TODO what else is important here?
+}
+```
+
+
+[[Return to contents]](#Contents)
+
+## DefiPoolInfoPairInfo
+```v
+struct DefiPoolInfoPairInfo {
+	currency string
+	amount   f64
+	// TODO what else is important here?
+}
+```
+
+
+[[Return to contents]](#Contents)
+
+## DefiPoolWithDrawArgs
+```v
+struct DefiPoolWithDrawArgs {
+	poolasset1 string // a pool has 2 assets, this is the first one
+	amount1    f64
+	currency1  string
+	poolasset2 string // a pool has 2 assets, this is the first one
+	amount2    f64
+	currency2  string
+	memo       string // per type blockchain we need to check that memo field is not too long, is not everywhere used
+}
+```
+
+withdraw money from the pool need to specify which currency and amount per currency
+
+[[Return to contents]](#Contents)
+
+## MultiSig
+```v
+struct MultiSig {
+pub:
+	pubkeys       []string // the pubkeys of who needs to sign
+	min_signature i16      // how many need minimally to sign
 }
 ```
 
@@ -506,14 +498,12 @@ pub mut:
 
 [[Return to contents]](#Contents)
 
-## SendArgs
+## OrderBookInfoPair
 ```v
-struct SendArgs {
-	account  string // the account we are sending info from
-	to       string
-	amount   f64
-	currency string
-	memo     string // per type blockchain we need to check that memo field is not too long
+struct OrderBookInfoPair {
+pub mut:
+	currency1 string
+	// TODO specify	
 }
 ```
 

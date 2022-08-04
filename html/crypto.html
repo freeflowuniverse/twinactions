@@ -32,7 +32,7 @@
           <div class="info">
             <div class="module">twinactions</div>
             <div class="toggle-version-container">
-              <span> 2d7406a</span>
+              <span> b8438de</span>
               <div id="dark-mode-toggle" role="switch" aria-checked="false" aria-label="Toggle dark mode"><svg xmlns="http://www.w3.org/2000/svg" class="light-icon" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg>
 <svg xmlns="http://www.w3.org/2000/svg" class="dark-icon" enable-background="new 0 0 24 24" height="24" viewBox="0 0 24 24" width="24"><g><rect fill="none" height="24" width="24"/></g><g><g><g><path d="M11.1,12.08C8.77,7.57,10.6,3.6,11.63,2.01C6.27,2.2,1.98,6.59,1.98,12c0,0.14,0.02,0.28,0.02,0.42 C2.62,12.15,3.29,12,4,12c1.66,0,3.18,0.83,4.1,2.15C9.77,14.63,11,16.17,11,18c0,1.52-0.87,2.83-2.12,3.51 c0.98,0.32,2.03,0.5,3.11,0.5c3.5,0,6.58-1.8,8.37-4.52C18,17.72,13.38,16.52,11.1,12.08z"/></g><path d="M7,16l-0.18,0C6.4,14.84,5.3,14,4,14c-1.66,0-3,1.34-3,3s1.34,3,3,3c0.62,0,2.49,0,3,0c1.1,0,2-0.9,2-2 C9,16.9,8.1,16,7,16z"/></g></g></svg>
 </div>
@@ -46,7 +46,7 @@
       <nav class="search hidden"></nav>
       <nav class="content hidden">
         <ul>
-          <li class="open"><div class="menu-row"><a href="./twinactions.html">twinactions</a></div></li><li class="open active"><div class="menu-row"><a href="./crypto.html">crypto</a></div></li>
+          <li class="open"><div class="menu-row"><a href="./twinactions.html">twinactions</a></div></li><li class="open active"><div class="menu-row"><a href="./crypto.html">crypto</a></div></li><li class="open"><div class="menu-row"><a href="./tfgrid.html">tfgrid</a></div></li>
         </ul>
       </nav>
     </header>
@@ -63,21 +63,6 @@
 <p>delete account on the handler in case it was already initialized, does not give error if not active yet if multisignature more than one will have to do</p>
 
 </section>
-						<section id="account_init" class="doc-node">
-							<div class="title"><h2>fn account_init <a href="#account_init">#</a></h2></div><pre class="signature"><code><span class="token keyword">fn</span> <span class="token function">account_init</span><span class="token punctuation">(</span>args AccountArgs<span class="token punctuation">)</span></code></pre>
-<p>init the account on the action handler will give error if it already exists and mneomonic or type different will also give error if an error to create it e.g. wrong mnemonic the account will be selected, which means all actions done after are done on this account</p>
-
-</section>
-						<section id="account_select" class="doc-node">
-							<div class="title"><h2>fn account_select <a href="#account_select">#</a></h2></div><pre class="signature"><code><span class="token keyword">fn</span> <span class="token function">account_select</span><span class="token punctuation">(</span>name <span class="token builtin">string</span><span class="token punctuation">)</span></code></pre>
-<p>the account will be selected, which means all actions done after are done on this account</p>
-
-</section>
-						<section id="asset_burn" class="doc-node">
-							<div class="title"><h2>fn asset_burn <a href="#asset_burn">#</a></h2></div><pre class="signature"><code><span class="token keyword">fn</span> <span class="token function">asset_burn</span><span class="token punctuation">(</span>args AssetBurnArgs<span class="token punctuation">)</span></code></pre>
-<p>destroy some of the tokens of the asset multisignature is used when asset was multisignature</p>
-
-</section>
 						<section id="asset_create" class="doc-node">
 							<div class="title"><h2>fn asset_create <a href="#asset_create">#</a></h2></div><pre class="signature"><code><span class="token keyword">fn</span> <span class="token function">asset_create</span><span class="token punctuation">(</span>args AssetCreateArgs<span class="token punctuation">)</span></code></pre>
 
@@ -86,11 +71,6 @@
 						<section id="asset_delete" class="doc-node">
 							<div class="title"><h2>fn asset_delete <a href="#asset_delete">#</a></h2></div><pre class="signature"><code><span class="token keyword">fn</span> <span class="token function">asset_delete</span><span class="token punctuation">(</span>args AssetDeleteArgs<span class="token punctuation">)</span></code></pre>
 <p>deletes the asset, checks the multisignature approach</p>
-
-</section>
-						<section id="asset_mint" class="doc-node">
-							<div class="title"><h2>fn asset_mint <a href="#asset_mint">#</a></h2></div><pre class="signature"><code><span class="token keyword">fn</span> <span class="token function">asset_mint</span><span class="token punctuation">(</span>args AssetMintArgs<span class="token punctuation">)</span></code></pre>
-<p>mint amount of tokens of the asset multisignature is used when asset was multisignature</p>
 
 </section>
 						<section id="buy" class="doc-node">
@@ -104,6 +84,31 @@
                             field is not too long, is not everywhere used
 }
 </code></pre>
+
+</section>
+						<section id="info" class="doc-node">
+							<div class="title"><h2>fn info <a href="#info">#</a></h2></div><pre class="signature"><code><span class="token keyword">fn</span> <span class="token function">info</span><span class="token punctuation">(</span>name <span class="token builtin">string</span><span class="token punctuation">)</span> <span class="token operator">?</span>AccountInfo</code></pre>
+<p>return info about your account, the name is the name of the account as used in .account_init() the info returned</p>
+<pre><code class="language-v">pub struct AccountInfo {
+    pubkey_bin     []u8 // binary form of key
+    pubkey_ed25519 ed25519.PublicKey // can be empty, if not same type, but often it is
+    assets         []Asset
+}
+pub struct AccountAsset {
+    amount   f64
+    currency string // always lowercase
+}
+</code></pre>
+
+</section>
+						<section id="asset_mint" class="doc-node">
+							<div class="title"><h2>fn asset_mint <a href="#asset_mint">#</a></h2></div><pre class="signature"><code><span class="token keyword">fn</span> <span class="token function">asset_mint</span><span class="token punctuation">(</span>args AssetMintArgs<span class="token punctuation">)</span></code></pre>
+<p>mint amount of tokens of the asset multisignature is used when asset was multisignature</p>
+
+</section>
+						<section id="orderbook_info" class="doc-node">
+							<div class="title"><h2>fn orderbook_info <a href="#orderbook_info">#</a></h2></div><pre class="signature"><code><span class="token keyword">fn</span> <span class="token function">orderbook_info</span><span class="token punctuation">(</span>account <span class="token builtin">string</span><span class="token punctuation">,</span> args OrderBookInfoArgs<span class="token punctuation">)</span> <span class="token operator">?</span><span class="token builtin">string</span></code></pre>
+<p>returns all relevant info from an orderbook</p>
 
 </section>
 						<section id="defi_pool_deposit" class="doc-node">
@@ -122,31 +127,6 @@
 <p>withdraw money from the pool need to specify which currency and amount per currency</p>
 
 </section>
-						<section id="defi_pool_withdraw_all" class="doc-node">
-							<div class="title"><h2>fn defi_pool_withdraw_all <a href="#defi_pool_withdraw_all">#</a></h2></div><pre class="signature"><code><span class="token keyword">fn</span> <span class="token function">defi_pool_withdraw_all</span><span class="token punctuation">(</span>account <span class="token builtin">string</span><span class="token punctuation">,</span> args DefiPoolIdentity<span class="token punctuation">)</span> <span class="token operator">?</span></code></pre>
-<p>withdraw money from the pool, do the maximum the purpose is to get all your money out from the pool the handler need to implement the logic to take all out</p>
-
-</section>
-						<section id="info" class="doc-node">
-							<div class="title"><h2>fn info <a href="#info">#</a></h2></div><pre class="signature"><code><span class="token keyword">fn</span> <span class="token function">info</span><span class="token punctuation">(</span>name <span class="token builtin">string</span><span class="token punctuation">)</span> <span class="token operator">?</span>AccountInfo</code></pre>
-<p>return info about your account, the name is the name of the account as used in .account_init() the info returned</p>
-<pre><code class="language-v">pub struct AccountInfo {
-    pubkey_bin     []u8 // binary form of key
-    pubkey_ed25519 ed25519.PublicKey // can be empty, if not same type, but often it is
-    assets         []Asset
-}
-pub struct AccountAsset {
-    amount   f64
-    currency string // always lowercase
-}
-</code></pre>
-
-</section>
-						<section id="orderbook_info" class="doc-node">
-							<div class="title"><h2>fn orderbook_info <a href="#orderbook_info">#</a></h2></div><pre class="signature"><code><span class="token keyword">fn</span> <span class="token function">orderbook_info</span><span class="token punctuation">(</span>account <span class="token builtin">string</span><span class="token punctuation">,</span> args OrderBookInfoArgs<span class="token punctuation">)</span> <span class="token operator">?</span><span class="token builtin">string</span></code></pre>
-<p>returns all relevant info from an orderbook</p>
-
-</section>
 						<section id="sell" class="doc-node">
 							<div class="title"><h2>fn sell <a href="#sell">#</a></h2></div><pre class="signature"><code><span class="token keyword">fn</span> <span class="token function">sell</span><span class="token punctuation">(</span>args SellActionArg<span class="token punctuation">)</span> <span class="token operator">?</span><span class="token builtin">string</span></code></pre>
 <p>set of actions to sell an asset everything is re-calculated to USD, the money you get back is in USDC pricing of USD comes from the blockchain (only stellar/algorand) the action server will execute in the background and return a uid4 identifier, which can be used to check sometimes the blockchain supports a deadline, sometimes the action handler will have to do it</p>
@@ -158,6 +138,11 @@ pub struct AccountAsset {
                                 field is not too long, is not everywhere used
 }
 </code></pre>
+
+</section>
+						<section id="defi_pool_withdraw_all" class="doc-node">
+							<div class="title"><h2>fn defi_pool_withdraw_all <a href="#defi_pool_withdraw_all">#</a></h2></div><pre class="signature"><code><span class="token keyword">fn</span> <span class="token function">defi_pool_withdraw_all</span><span class="token punctuation">(</span>account <span class="token builtin">string</span><span class="token punctuation">,</span> args DefiPoolIdentity<span class="token punctuation">)</span> <span class="token operator">?</span></code></pre>
+<p>withdraw money from the pool, do the maximum the purpose is to get all your money out from the pool the handler need to implement the logic to take all out</p>
 
 </section>
 						<section id="send" class="doc-node">
@@ -172,6 +157,11 @@ pub struct AccountAsset {
 }
 ``` multisig is supported, if account is multisig, the the needed needs to be done
 </code></pre>
+
+</section>
+						<section id="account_init" class="doc-node">
+							<div class="title"><h2>fn account_init <a href="#account_init">#</a></h2></div><pre class="signature"><code><span class="token keyword">fn</span> <span class="token function">account_init</span><span class="token punctuation">(</span>args AccountArgs<span class="token punctuation">)</span></code></pre>
+<p>init the account on the action handler will give error if it already exists and mneomonic or type different will also give error if an error to create it e.g. wrong mnemonic the account will be selected, which means all actions done after are done on this account</p>
 
 </section>
 						<section id="trade_delete" class="doc-node">
@@ -189,40 +179,38 @@ pub struct AccountAsset {
 <p>returns all relevant info from an orderbook uid is uid4, and as given by sales/buy order creation</p>
 
 </section>
-						<section id="OrderBookInfoPair" class="doc-node">
-							<div class="title"><h2>struct OrderBookInfoPair <a href="#OrderBookInfoPair">#</a></h2></div><pre class="signature"><code><span class="token keyword">struct</span> <span class="token symbol">OrderBookInfoPair</span> <span class="token punctuation">{</span>
+						<section id="asset_burn" class="doc-node">
+							<div class="title"><h2>fn asset_burn <a href="#asset_burn">#</a></h2></div><pre class="signature"><code><span class="token keyword">fn</span> <span class="token function">asset_burn</span><span class="token punctuation">(</span>args AssetBurnArgs<span class="token punctuation">)</span></code></pre>
+<p>destroy some of the tokens of the asset multisignature is used when asset was multisignature</p>
+
+</section>
+						<section id="SellActionArg" class="doc-node">
+							<div class="title"><h2>struct SellActionArg <a href="#SellActionArg">#</a></h2></div><pre class="signature"><code><span class="token keyword">struct</span> <span class="token symbol">SellActionArg</span> <span class="token punctuation">{</span>
+	account            <span class="token builtin">string</span>
+	asset_sell         <span class="token builtin">string</span> <span class="token comment">// the asset you want to sell</span>
+	min_price_usd      <span class="token builtin">f64</span>    <span class="token comment">// min price your want to sell for always in USDC</span>
+	expirationtime_min <span class="token builtin">u16</span>    <span class="token comment">// max time in minutes, the trade stays open</span>
+	memo               <span class="token builtin">string</span> <span class="token comment">// per type blockchain we need to check that memo field is not too long, is not everywhere used</span>
+<span class="token punctuation">}</span></code></pre>
+
+
+</section>
+						<section id="SendArgs" class="doc-node">
+							<div class="title"><h2>struct SendArgs <a href="#SendArgs">#</a></h2></div><pre class="signature"><code><span class="token keyword">struct</span> <span class="token symbol">SendArgs</span> <span class="token punctuation">{</span>
+	account  <span class="token builtin">string</span> <span class="token comment">// the account we are sending info from</span>
+	to       <span class="token builtin">string</span>
+	amount   <span class="token builtin">f64</span>
+	currency <span class="token builtin">string</span>
+	memo     <span class="token builtin">string</span> <span class="token comment">// per type blockchain we need to check that memo field is not too long</span>
+<span class="token punctuation">}</span></code></pre>
+
+
+</section>
+						<section id="TradeInfoPair" class="doc-node">
+							<div class="title"><h2>struct TradeInfoPair <a href="#TradeInfoPair">#</a></h2></div><pre class="signature"><code><span class="token keyword">struct</span> <span class="token symbol">TradeInfoPair</span> <span class="token punctuation">{</span>
 <span class="token keyword">pub</span> <span class="token keyword">mut</span><span class="token punctuation">:</span>
-	currency1 <span class="token builtin">string</span>
 <span class="token comment">// TODO specify	</span>
-<span class="token punctuation">}</span></code></pre>
-
-
-</section>
-						<section id="DefiPoolDepositArgs" class="doc-node">
-							<div class="title"><h2>struct DefiPoolDepositArgs <a href="#DefiPoolDepositArgs">#</a></h2></div><pre class="signature"><code><span class="token keyword">struct</span> <span class="token symbol">DefiPoolDepositArgs</span> <span class="token punctuation">{</span>
-	poolasset1 <span class="token builtin">string</span> <span class="token comment">// a pool has 2 assets, this is the first one</span>
-	amount1    <span class="token builtin">f64</span>
-	currency1  <span class="token builtin">string</span>
-	poolasset2 <span class="token builtin">string</span> <span class="token comment">// a pool has 2 assets, this is the first one</span>
-	amount2    <span class="token builtin">f64</span>
-	currency2  <span class="token builtin">string</span>
-	memo       <span class="token builtin">string</span> <span class="token comment">// per type blockchain we need to check that memo field is not too long, is not everywhere used</span>
-<span class="token punctuation">}</span></code></pre>
-<p>set of arguments to create, or add to a DEFIPool this is for an AMM DEFI pool (Automatic Market Making DEFI Pool)</p>
-
-</section>
-						<section id="DefiPoolIdentity" class="doc-node">
-							<div class="title"><h2>struct DefiPoolIdentity <a href="#DefiPoolIdentity">#</a></h2></div><pre class="signature"><code><span class="token keyword">struct</span> <span class="token symbol">DefiPoolIdentity</span> <span class="token punctuation">{</span>
-	poolasset1 <span class="token builtin">string</span> <span class="token comment">// a pool has 2 assets, this is the first one</span>
-	poolasset2 <span class="token builtin">string</span>
-<span class="token punctuation">}</span></code></pre>
-<p>identify a pool, is unique, the order of asset 1 or 2 does not matter</p>
-
-</section>
-						<section id="DefiPoolInfo" class="doc-node">
-							<div class="title"><h2>struct DefiPoolInfo <a href="#DefiPoolInfo">#</a></h2></div><pre class="signature"><code><span class="token keyword">struct</span> <span class="token symbol">DefiPoolInfo</span> <span class="token punctuation">{</span>
-	pairs <span class="token punctuation">[</span><span class="token punctuation">]</span>DefiPoolInfoPairInfo <span class="token comment">// is always 2, need to check this is correct</span>
-<span class="token comment">// TODO what else is important here?</span>
+	state TradeState
 <span class="token punctuation">}</span></code></pre>
 
 
@@ -252,48 +240,6 @@ pub struct AccountAsset {
 	pubkey_bin     <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token builtin">u8</span> <span class="token comment">// binary form of key</span>
 	pubkey_ed25519 ed25519<span class="token punctuation">.</span>PublicKey <span class="token comment">// can be empty, if not same type, but often it is</span>
 	assets         <span class="token punctuation">[</span><span class="token punctuation">]</span>Asset
-<span class="token punctuation">}</span></code></pre>
-
-
-</section>
-						<section id="DefiPoolInfoPairInfo" class="doc-node">
-							<div class="title"><h2>struct DefiPoolInfoPairInfo <a href="#DefiPoolInfoPairInfo">#</a></h2></div><pre class="signature"><code><span class="token keyword">struct</span> <span class="token symbol">DefiPoolInfoPairInfo</span> <span class="token punctuation">{</span>
-	currency <span class="token builtin">string</span>
-	amount   <span class="token builtin">f64</span>
-<span class="token comment">// TODO what else is important here?</span>
-<span class="token punctuation">}</span></code></pre>
-
-
-</section>
-						<section id="DefiPoolWithDrawArgs" class="doc-node">
-							<div class="title"><h2>struct DefiPoolWithDrawArgs <a href="#DefiPoolWithDrawArgs">#</a></h2></div><pre class="signature"><code><span class="token keyword">struct</span> <span class="token symbol">DefiPoolWithDrawArgs</span> <span class="token punctuation">{</span>
-	poolasset1 <span class="token builtin">string</span> <span class="token comment">// a pool has 2 assets, this is the first one</span>
-	amount1    <span class="token builtin">f64</span>
-	currency1  <span class="token builtin">string</span>
-	poolasset2 <span class="token builtin">string</span> <span class="token comment">// a pool has 2 assets, this is the first one</span>
-	amount2    <span class="token builtin">f64</span>
-	currency2  <span class="token builtin">string</span>
-	memo       <span class="token builtin">string</span> <span class="token comment">// per type blockchain we need to check that memo field is not too long, is not everywhere used</span>
-<span class="token punctuation">}</span></code></pre>
-<p>withdraw money from the pool need to specify which currency and amount per currency</p>
-
-</section>
-						<section id="SellActionArg" class="doc-node">
-							<div class="title"><h2>struct SellActionArg <a href="#SellActionArg">#</a></h2></div><pre class="signature"><code><span class="token keyword">struct</span> <span class="token symbol">SellActionArg</span> <span class="token punctuation">{</span>
-	account            <span class="token builtin">string</span>
-	asset_sell         <span class="token builtin">string</span> <span class="token comment">// the asset you want to sell</span>
-	min_price_usd      <span class="token builtin">f64</span>    <span class="token comment">// min price your want to sell for always in USDC</span>
-	expirationtime_min <span class="token builtin">u16</span>    <span class="token comment">// max time in minutes, the trade stays open</span>
-	memo               <span class="token builtin">string</span> <span class="token comment">// per type blockchain we need to check that memo field is not too long, is not everywhere used</span>
-<span class="token punctuation">}</span></code></pre>
-
-
-</section>
-						<section id="MultiSig" class="doc-node">
-							<div class="title"><h2>struct MultiSig <a href="#MultiSig">#</a></h2></div><pre class="signature"><code><span class="token keyword">struct</span> <span class="token symbol">MultiSig</span> <span class="token punctuation">{</span>
-<span class="token keyword">pub</span><span class="token punctuation">:</span>
-	pubkeys       <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token builtin">string</span> <span class="token comment">// the pubkeys of who needs to sign</span>
-	min_signature <span class="token builtin">i16</span>      <span class="token comment">// how many need minimally to sign</span>
 <span class="token punctuation">}</span></code></pre>
 
 
@@ -338,15 +284,6 @@ pub struct AccountAsset {
 
 
 </section>
-						<section id="TradeInfoPair" class="doc-node">
-							<div class="title"><h2>struct TradeInfoPair <a href="#TradeInfoPair">#</a></h2></div><pre class="signature"><code><span class="token keyword">struct</span> <span class="token symbol">TradeInfoPair</span> <span class="token punctuation">{</span>
-<span class="token keyword">pub</span> <span class="token keyword">mut</span><span class="token punctuation">:</span>
-<span class="token comment">// TODO specify	</span>
-	state TradeState
-<span class="token punctuation">}</span></code></pre>
-
-
-</section>
 						<section id="BuyActionArg" class="doc-node">
 							<div class="title"><h2>struct BuyActionArg <a href="#BuyActionArg">#</a></h2></div><pre class="signature"><code><span class="token keyword">struct</span> <span class="token symbol">BuyActionArg</span> <span class="token punctuation">{</span>
 	account            <span class="token builtin">string</span>
@@ -355,6 +292,66 @@ pub struct AccountAsset {
 	expirationtime_min <span class="token builtin">u16</span>    <span class="token comment">// max time in minutes, the trade stays open</span>
 	memo               <span class="token builtin">string</span> <span class="token comment">// per type blockchain we need to check that memo field</span>
 <span class="token comment">// is not too long, is not everywhere used</span>
+<span class="token punctuation">}</span></code></pre>
+
+
+</section>
+						<section id="DefiPoolDepositArgs" class="doc-node">
+							<div class="title"><h2>struct DefiPoolDepositArgs <a href="#DefiPoolDepositArgs">#</a></h2></div><pre class="signature"><code><span class="token keyword">struct</span> <span class="token symbol">DefiPoolDepositArgs</span> <span class="token punctuation">{</span>
+	poolasset1 <span class="token builtin">string</span> <span class="token comment">// a pool has 2 assets, this is the first one</span>
+	amount1    <span class="token builtin">f64</span>
+	currency1  <span class="token builtin">string</span>
+	poolasset2 <span class="token builtin">string</span> <span class="token comment">// a pool has 2 assets, this is the first one</span>
+	amount2    <span class="token builtin">f64</span>
+	currency2  <span class="token builtin">string</span>
+	memo       <span class="token builtin">string</span> <span class="token comment">// per type blockchain we need to check that memo field is not too long, is not everywhere used</span>
+<span class="token punctuation">}</span></code></pre>
+<p>set of arguments to create, or add to a DEFIPool this is for an AMM DEFI pool (Automatic Market Making DEFI Pool)</p>
+
+</section>
+						<section id="DefiPoolIdentity" class="doc-node">
+							<div class="title"><h2>struct DefiPoolIdentity <a href="#DefiPoolIdentity">#</a></h2></div><pre class="signature"><code><span class="token keyword">struct</span> <span class="token symbol">DefiPoolIdentity</span> <span class="token punctuation">{</span>
+	poolasset1 <span class="token builtin">string</span> <span class="token comment">// a pool has 2 assets, this is the first one</span>
+	poolasset2 <span class="token builtin">string</span>
+<span class="token punctuation">}</span></code></pre>
+<p>identify a pool, is unique, the order of asset 1 or 2 does not matter</p>
+
+</section>
+						<section id="DefiPoolInfo" class="doc-node">
+							<div class="title"><h2>struct DefiPoolInfo <a href="#DefiPoolInfo">#</a></h2></div><pre class="signature"><code><span class="token keyword">struct</span> <span class="token symbol">DefiPoolInfo</span> <span class="token punctuation">{</span>
+	pairs <span class="token punctuation">[</span><span class="token punctuation">]</span>DefiPoolInfoPairInfo <span class="token comment">// is always 2, need to check this is correct</span>
+<span class="token comment">// TODO what else is important here?</span>
+<span class="token punctuation">}</span></code></pre>
+
+
+</section>
+						<section id="DefiPoolInfoPairInfo" class="doc-node">
+							<div class="title"><h2>struct DefiPoolInfoPairInfo <a href="#DefiPoolInfoPairInfo">#</a></h2></div><pre class="signature"><code><span class="token keyword">struct</span> <span class="token symbol">DefiPoolInfoPairInfo</span> <span class="token punctuation">{</span>
+	currency <span class="token builtin">string</span>
+	amount   <span class="token builtin">f64</span>
+<span class="token comment">// TODO what else is important here?</span>
+<span class="token punctuation">}</span></code></pre>
+
+
+</section>
+						<section id="DefiPoolWithDrawArgs" class="doc-node">
+							<div class="title"><h2>struct DefiPoolWithDrawArgs <a href="#DefiPoolWithDrawArgs">#</a></h2></div><pre class="signature"><code><span class="token keyword">struct</span> <span class="token symbol">DefiPoolWithDrawArgs</span> <span class="token punctuation">{</span>
+	poolasset1 <span class="token builtin">string</span> <span class="token comment">// a pool has 2 assets, this is the first one</span>
+	amount1    <span class="token builtin">f64</span>
+	currency1  <span class="token builtin">string</span>
+	poolasset2 <span class="token builtin">string</span> <span class="token comment">// a pool has 2 assets, this is the first one</span>
+	amount2    <span class="token builtin">f64</span>
+	currency2  <span class="token builtin">string</span>
+	memo       <span class="token builtin">string</span> <span class="token comment">// per type blockchain we need to check that memo field is not too long, is not everywhere used</span>
+<span class="token punctuation">}</span></code></pre>
+<p>withdraw money from the pool need to specify which currency and amount per currency</p>
+
+</section>
+						<section id="MultiSig" class="doc-node">
+							<div class="title"><h2>struct MultiSig <a href="#MultiSig">#</a></h2></div><pre class="signature"><code><span class="token keyword">struct</span> <span class="token symbol">MultiSig</span> <span class="token punctuation">{</span>
+<span class="token keyword">pub</span><span class="token punctuation">:</span>
+	pubkeys       <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token builtin">string</span> <span class="token comment">// the pubkeys of who needs to sign</span>
+	min_signature <span class="token builtin">i16</span>      <span class="token comment">// how many need minimally to sign</span>
 <span class="token punctuation">}</span></code></pre>
 
 
@@ -375,13 +372,11 @@ pub struct AccountAsset {
 
 
 </section>
-						<section id="SendArgs" class="doc-node">
-							<div class="title"><h2>struct SendArgs <a href="#SendArgs">#</a></h2></div><pre class="signature"><code><span class="token keyword">struct</span> <span class="token symbol">SendArgs</span> <span class="token punctuation">{</span>
-	account  <span class="token builtin">string</span> <span class="token comment">// the account we are sending info from</span>
-	to       <span class="token builtin">string</span>
-	amount   <span class="token builtin">f64</span>
-	currency <span class="token builtin">string</span>
-	memo     <span class="token builtin">string</span> <span class="token comment">// per type blockchain we need to check that memo field is not too long</span>
+						<section id="OrderBookInfoPair" class="doc-node">
+							<div class="title"><h2>struct OrderBookInfoPair <a href="#OrderBookInfoPair">#</a></h2></div><pre class="signature"><code><span class="token keyword">struct</span> <span class="token symbol">OrderBookInfoPair</span> <span class="token punctuation">{</span>
+<span class="token keyword">pub</span> <span class="token keyword">mut</span><span class="token punctuation">:</span>
+	currency1 <span class="token builtin">string</span>
+<span class="token comment">// TODO specify	</span>
 <span class="token punctuation">}</span></code></pre>
 
 
@@ -395,25 +390,22 @@ pub struct AccountAsset {
 <li class="open"><a href="#account_delete">fn account_delete</a>        <ul>
 </ul>
 </li>
-<li class="open"><a href="#account_init">fn account_init</a>        <ul>
-</ul>
-</li>
-<li class="open"><a href="#account_select">fn account_select</a>        <ul>
-</ul>
-</li>
-<li class="open"><a href="#asset_burn">fn asset_burn</a>        <ul>
-</ul>
-</li>
 <li class="open"><a href="#asset_create">fn asset_create</a>        <ul>
 </ul>
 </li>
 <li class="open"><a href="#asset_delete">fn asset_delete</a>        <ul>
 </ul>
 </li>
+<li class="open"><a href="#buy">fn buy</a>        <ul>
+</ul>
+</li>
+<li class="open"><a href="#info">fn info</a>        <ul>
+</ul>
+</li>
 <li class="open"><a href="#asset_mint">fn asset_mint</a>        <ul>
 </ul>
 </li>
-<li class="open"><a href="#buy">fn buy</a>        <ul>
+<li class="open"><a href="#orderbook_info">fn orderbook_info</a>        <ul>
 </ul>
 </li>
 <li class="open"><a href="#defi_pool_deposit">fn defi_pool_deposit</a>        <ul>
@@ -425,19 +417,16 @@ pub struct AccountAsset {
 <li class="open"><a href="#defi_pool_withdraw">fn defi_pool_withdraw</a>        <ul>
 </ul>
 </li>
-<li class="open"><a href="#defi_pool_withdraw_all">fn defi_pool_withdraw_all</a>        <ul>
-</ul>
-</li>
-<li class="open"><a href="#info">fn info</a>        <ul>
-</ul>
-</li>
-<li class="open"><a href="#orderbook_info">fn orderbook_info</a>        <ul>
-</ul>
-</li>
 <li class="open"><a href="#sell">fn sell</a>        <ul>
 </ul>
 </li>
+<li class="open"><a href="#defi_pool_withdraw_all">fn defi_pool_withdraw_all</a>        <ul>
+</ul>
+</li>
 <li class="open"><a href="#send">fn send</a>        <ul>
+</ul>
+</li>
+<li class="open"><a href="#account_init">fn account_init</a>        <ul>
 </ul>
 </li>
 <li class="open"><a href="#trade_delete">fn trade_delete</a>        <ul>
@@ -449,16 +438,16 @@ pub struct AccountAsset {
 <li class="open"><a href="#trade_info">fn trade_info</a>        <ul>
 </ul>
 </li>
-<li class="open"><a href="#OrderBookInfoPair">struct OrderBookInfoPair</a>        <ul>
+<li class="open"><a href="#asset_burn">fn asset_burn</a>        <ul>
 </ul>
 </li>
-<li class="open"><a href="#DefiPoolDepositArgs">struct DefiPoolDepositArgs</a>        <ul>
+<li class="open"><a href="#SellActionArg">struct SellActionArg</a>        <ul>
 </ul>
 </li>
-<li class="open"><a href="#DefiPoolIdentity">struct DefiPoolIdentity</a>        <ul>
+<li class="open"><a href="#SendArgs">struct SendArgs</a>        <ul>
 </ul>
 </li>
-<li class="open"><a href="#DefiPoolInfo">struct DefiPoolInfo</a>        <ul>
+<li class="open"><a href="#TradeInfoPair">struct TradeInfoPair</a>        <ul>
 </ul>
 </li>
 <li class="open"><a href="#AccountArgs">struct AccountArgs</a>        <ul>
@@ -468,18 +457,6 @@ pub struct AccountAsset {
 </ul>
 </li>
 <li class="open"><a href="#AccountInfo">struct AccountInfo</a>        <ul>
-</ul>
-</li>
-<li class="open"><a href="#DefiPoolInfoPairInfo">struct DefiPoolInfoPairInfo</a>        <ul>
-</ul>
-</li>
-<li class="open"><a href="#DefiPoolWithDrawArgs">struct DefiPoolWithDrawArgs</a>        <ul>
-</ul>
-</li>
-<li class="open"><a href="#SellActionArg">struct SellActionArg</a>        <ul>
-</ul>
-</li>
-<li class="open"><a href="#MultiSig">struct MultiSig</a>        <ul>
 </ul>
 </li>
 <li class="open"><a href="#AssetBurnArgs">struct AssetBurnArgs</a>        <ul>
@@ -494,10 +471,25 @@ pub struct AccountAsset {
 <li class="open"><a href="#AssetMintArgs">struct AssetMintArgs</a>        <ul>
 </ul>
 </li>
-<li class="open"><a href="#TradeInfoPair">struct TradeInfoPair</a>        <ul>
+<li class="open"><a href="#BuyActionArg">struct BuyActionArg</a>        <ul>
 </ul>
 </li>
-<li class="open"><a href="#BuyActionArg">struct BuyActionArg</a>        <ul>
+<li class="open"><a href="#DefiPoolDepositArgs">struct DefiPoolDepositArgs</a>        <ul>
+</ul>
+</li>
+<li class="open"><a href="#DefiPoolIdentity">struct DefiPoolIdentity</a>        <ul>
+</ul>
+</li>
+<li class="open"><a href="#DefiPoolInfo">struct DefiPoolInfo</a>        <ul>
+</ul>
+</li>
+<li class="open"><a href="#DefiPoolInfoPairInfo">struct DefiPoolInfoPairInfo</a>        <ul>
+</ul>
+</li>
+<li class="open"><a href="#DefiPoolWithDrawArgs">struct DefiPoolWithDrawArgs</a>        <ul>
+</ul>
+</li>
+<li class="open"><a href="#MultiSig">struct MultiSig</a>        <ul>
 </ul>
 </li>
 <li class="open"><a href="#OrderBookInfo">struct OrderBookInfo</a>        <ul>
@@ -506,7 +498,7 @@ pub struct AccountAsset {
 <li class="open"><a href="#OrderBookInfoArgs">struct OrderBookInfoArgs</a>        <ul>
 </ul>
 </li>
-<li class="open"><a href="#SendArgs">struct SendArgs</a>        <ul>
+<li class="open"><a href="#OrderBookInfoPair">struct OrderBookInfoPair</a>        <ul>
 </ul>
 </li>
 </ul></div>
