@@ -7,4 +7,5 @@ v fmt . -w
 v doc  -m  -f html  -no-timestamp -comments -o html2 twinactions/
 rm -rf html/
 mv html2/_docs/ html/
+set +ex
 open html/twinactions.html
