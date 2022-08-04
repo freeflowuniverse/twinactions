@@ -3,17 +3,17 @@ module tfgrid
 import freeflowuniverse.crystallib.resp
 import freeflowuniverse.crystallib.twinactions
 
-enum BlockchainType {
-	algorand
-	stellar
-	tfchain
-	binancesmart
+enum TFGridNet {
+	testnet
+	devnet
+	mainnet
 }
 
 pub struct AccountArgs {
 pub:
 	name       string
-	mnemonic   string
+	mnemonic   string // private key in mnemonic form to be able to work on the right TFGrid net (TFChain)
+	nettype    TFGridNet
 	expiration int = 300 // will expire default 5 min
 	multisig   MultiSig // optional, not implemented yet in TFGrid
 }
@@ -25,7 +25,7 @@ pub:
 	min_signature i16      // how many need minimally to sign
 }
 
-// init the account on the action handler for TFGrud
+// init the account on the action handler for TFGrid
 // will give error if it already exists and mneomonic or type different
 // will also give error if an error to create it e.g. wrong mnemonic
 // the account will be selected, which means all actions done after are done on this account
