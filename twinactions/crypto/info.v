@@ -1,7 +1,7 @@
 module crypto
 
 import freeflowuniverse.crystallib.resp
-import freeflowuniverse.crystallib.twinactions
+import freeflowuniverse.twinactions.twinactions
 import crypto.ed25519
 
 pub struct AccountInfo {

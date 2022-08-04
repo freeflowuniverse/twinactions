@@ -1,7 +1,7 @@
 module crypto
 
 import freeflowuniverse.crystallib.resp
-import freeflowuniverse.crystallib.twinactions
+import freeflowuniverse.twinactions.twinactions
 
 enum BlockchainType {
 	algorand
@@ -29,7 +29,7 @@ pub:
 // will give error if it already exists and mneomonic or type different
 // will also give error if an error to create it e.g. wrong mnemonic
 // the account will be selected, which means all actions done after are done on this account
-pub fn account_init(args AccountArgs) {
+pub fn account_init(args AccountArgs) ? {
 	mut b := resp.builder_new()
 	// in future this will go automacally by means of resp encoder, now we create it manual
 	b.add(resp.r_string('crypto.account.init')) // the first argument is the command
@@ -38,9 +38,9 @@ pub fn account_init(args AccountArgs) {
 	b.add(resp.r_string(args.blockchaintype.str()))
 	b.add(resp.r_int(args.expiration))
 	// TODO add multisig... (maybe the reflection feature is already there)
-	result := twinactions.action_send(b)?
+	mut result := twinactions.action_send(b)?
 	// thjere is no return only error in case the account cannot be created e.g. exists already and different mnemonic or type
-	if result.get_string() == 'OK' {
+	if result.get_string() or { panic(err) } == 'OK' {
 		return
 	}
 	return error('Could not init account. Error:\n#$result.get_string()') // get following string should be the error message
@@ -50,10 +50,13 @@ pub fn account_init(args AccountArgs) {
 // does not give error if not active yet
 // if multisignature more than one will have to do
 pub fn account_delete(name string) ? {
+	mut b := resp.builder_new()
 	b.add(resp.r_string('crypto.account.delete')) // the first argument is the command
-	b.add(resp.r_string(args.name))
+	b.add(resp.r_string(name))
+	mut result := twinactions.action_send(b)?
+
 	// thjere is no return only error in case the account cannot be created e.g. exists already and different mnemonic or type
-	if result.get_string() == 'OK' {
+	if result.get_string() or { panic(err) } == 'OK' {
 		return
 	}
 	return error('Could not delete account. Error:\n#$result.get_string()') // get following string should be the error message

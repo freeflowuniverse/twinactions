@@ -62,7 +62,7 @@ pub fn trade_delete(account string, uid string) ?TradeInfoPair {
 	mut b := resp.builder_new()
 	b.add(resp.r_string('crypto.trade.delete'))
 	// TODO:...
-	result := twinactions.action_send(b)?
+	mut result := twinactions.action_send(b)?
 	if result.get_string() == 'OK' {
 		return
 	}

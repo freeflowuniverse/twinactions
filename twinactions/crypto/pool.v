@@ -1,7 +1,7 @@
 module crypto
 
 import freeflowuniverse.crystallib.resp
-import freeflowuniverse.crystallib.twinactions
+import freeflowuniverse.twinactions.twinactions
 
 // set of arguments to create, or add to a DEFIPool
 // this is for an AMM DEFI pool (Automatic Market Making DEFI Pool)
