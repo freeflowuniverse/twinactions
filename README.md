@@ -2,7 +2,7 @@
 
 > planning: https://github.com/orgs/freeflowuniverse/projects/3/views/2
 
-implements set of actions to be called over websockets, which run on behalf of caller
+implements set of actions to be called over websockets
 
 see the documentaton on
 
