@@ -8,6 +8,10 @@ v doc  -m  -f html  -no-timestamp -comments -o html2 twinactions/
 rm -rf html/
 mv html2/_docs/ html/
 rm -rf html2/
+pushd docs
+bash run.sh
+popd
 if [ -x "$(command -v open)" ]; then
-    open html/twinactions.html 2>&1 > /dev/null 
+    # open html/twinactions.html 2>&1 > /dev/null 
+    open docs/book/index.html 2>&1 > /dev/null 
 fi

@@ -1,2 +1,2 @@
-mdbook build --open
+mdbook build
  

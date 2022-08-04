@@ -36,7 +36,6 @@ jobs:
         # v doc twinactions/ -f md  -no-timestamp -comments -o docs/src/v
         bash doc.sh
         cd docs
-        mdbook build      
         git worktree add gh-pages
         git config user.name "Deploy from CI"
         git config user.email ""
