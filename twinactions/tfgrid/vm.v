@@ -46,9 +46,9 @@ fn (iprange IPRange) check() ? {
 	// TODO
 }
 
-// check that the iprange is properly set
+// checks size and path
 fn (disks VMDisk) check() ? {
-	// TODO: check it starts with / on mountpoint & sizes are reasonale
+	// TODO: check it starts with / on mountpoint & sizes are reasonable
 }
 
 // init the account on the action handler for TFGrid

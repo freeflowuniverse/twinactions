@@ -32,8 +32,8 @@ pub fn sell(args SellActionArg) ?string {
 	// in future this will go automacally by means of resp encoder, now we create it manual
 	b.add(resp.r_string('crypto.pool.sell'))
 	// TODO:...
-	result := twinactions.action_send(b)?
-	if result.get_string() == 'OK' {
+	mut result := twinactions.action_send(b)?
+	if result.get_string() or { panic(err) } == 'OK' {
 		return
 	}
 	return error('Could sell money. Error:\n#$result.get_string()') // get following string should be the error message

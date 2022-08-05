@@ -1,7 +1,7 @@
 module crypto
 
 import freeflowuniverse.crystallib.resp
-import freeflowuniverse.crystallib.twinactions
+import freeflowuniverse.twinactions.twinactions
 
 pub struct SendArgs {
 	account  string // the account we are sending info from
