@@ -17,8 +17,6 @@ pub fn action_send(b resp.Builder) ?resp.StringLineReader {
 	// return is also as bytestr for resp no need to decode here, return
 	// data=bytestr{} //data is the return
 
-	b.prepend(resp.r_string(cmd)) // will prepend the cmd at the start
-
 	// TODO: now send over websockets and make sure we get it back as StrinLineReader
 	// res := resp....(data)? //this will decode the return and make sure it happens ok
 	// return res

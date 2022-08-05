@@ -6,7 +6,7 @@ static/assets/version
 logs/
 repos/
 archives/
-
+_docs/
 *.code-workspace
 .vscode
 
@@ -20,3 +20,6 @@ generated_go/
 generated_rust/
 
 mdbook/
+
+
+vls.log
