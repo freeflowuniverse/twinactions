@@ -17,6 +17,7 @@ import (
 	"github.com/algorand/go-algorand-sdk/future"
 	"github.com/algorand/go-algorand-sdk/mnemonic"
 	"github.com/algorand/go-algorand-sdk/transaction"
+	"github.com/algorand/go-algorand-sdk/types"
 	// packages above need to be gotten from github
 )
 
@@ -108,30 +109,12 @@ func createAsset(algodClient *algod.Client, creatorAccount [2]string, assetNote 
 		return
 	}
 
-	fmt.Printf("Asset created AssetName: %s\n", txn.AssetConfigTxnFields.AssetParams.AssetName)
-	// sign the transaction
-	txid, stx, err := crypto.SignTransaction(creatorAccount[1], txn)
-	if err != nil {
-		fmt.Printf("Failed to sign transaction: %s\n", err)
-		return
-	}
-	// Broadcast the transaction to the network
-	sendResponse, err := algodClient.SendRawTransaction(stx).Do(context.Background())
-	if err != nil {
-		fmt.Printf("failed to send transaction: %s\n", err)
-		return
-	}
-	fmt.Printf("Submitted transaction %s\n", sendResponse)
-	// Wait for confirmation
-	confirmedTxn, err := future.WaitForConfirmation(algodClient, txid, 4, context.Background())
-	if err != nil {
-		fmt.Printf("Error waiting for confirmation on txID: %s\n", txid)
-		return
-	}
-	fmt.Printf("Confirmed Transaction: %s in Round %d\n", txid, confirmedTxn.ConfirmedRound)
+	confirmedTxn := signSendConfirm(creatorAccount, txn)
+
 	assetID := confirmedTxn.AssetIndex
 	// print created asset and asset holding info for this asset
 	fmt.Printf("Asset ID: %d\n", assetID)
+	printAsset(assetID, creatorAccount[0], algodClient)
 
 	return assetID
 }
@@ -165,28 +148,9 @@ func optinToAsset(algodClient *algod.Client, assetReceiver [2]string, optinNote 
 		fmt.Printf("Failed to send transaction MakeAssetAcceptanceTxn: %s\n", err)
 		return
 	}
-	txid, stx, err := crypto.SignTransaction(assetReceiver[1], txn)
-	if err != nil {
-		fmt.Printf("Failed to sign transaction: %s\n", err)
-		return
-	}
-
-	// Broadcast the transaction to the network
-	sendResponse, err := algodClient.SendRawTransaction(stx).Do(context.Background())
-	if err != nil {
-		fmt.Printf("failed to send transaction: %s\n", err)
-		return
-	}
-
-	confirmedTxn, err := future.WaitForConfirmation(algodClient, txid, 4, context.Background())
-	if err != nil {
-		fmt.Printf("Error waiting for confirmation on txID: %s\n", txid)
-		return
-	}
-	fmt.Printf("Confirmed Transaction: %s in Round %d\n", txid, confirmedTxn.ConfirmedRound)
+	signSendConfirm(account, txn)
 
 	// print created assetholding for this asset and the asset receiver, showing 0 balance
-	fmt.Printf("Asset ID: %d\n", assetID)
 	fmt.Printf("Asset Receiver: %s\n", assetReceiver[0])
 	printAsset(assetID, assetReceiver[0], algodClient)
 }
@@ -220,26 +184,8 @@ func transferAsset(algodClient *algod.Client, sender [2]string, receiverAddress,
 		fmt.Printf("Failed to send transaction MakeAssetTransfer Txn: %s\n", err)
 		return
 	}
-	txid, stx, err := crypto.SignTransaction(sender[1], txn)
-	if err != nil {
-		fmt.Printf("Failed to sign transaction: %s\n", err)
-		return
-	}
-	// Broadcast the transaction to the network
-	sendResponse, err := algodClient.SendRawTransaction(stx).Do(context.Background())
-	if err != nil {
-		fmt.Printf("failed to send transaction: %s\n", err)
-		return
-	}
-	// Wait for transaction to be confirmed
-	confirmedTxn, err := future.WaitForConfirmation(algodClient, txid, 4, context.Background())
-	if err != nil {
-		fmt.Printf("Error waiting for confirmation on txID: %s\n", txid)
-		return
-	}
-	fmt.Printf("Confirmed Transaction: %s in Round %d\n", txid, confirmedTxn.ConfirmedRound)
+	signSendConfirm(account, txn)
 
-	fmt.Printf("Asset ID: %d\n", assetID)
 	fmt.Printf("Asset Sender: %s\n", sender[0])
 	fmt.Printf("Asset Recipient: %s\n", receiverAddress)
 	printAsset(assetID, receiverAddress, algodClient)
@@ -252,4 +198,26 @@ func transferAsset(algodClient *algod.Client, sender [2]string, receiverAddress,
 
 //// Sign, Send, Confirm
 
-// func signSendConfirm() //**** To be created next
+func signSendConfirm(account [2]string, txn types.Transaction) types.Transaction {
+	txid, stx, err := crypto.SignTransaction(account[1], txn)
+	if err != nil {
+		fmt.Printf("Failed to sign transaction: %s\n", err)
+		return
+	}
+
+	// Broadcast the transaction to the network
+	sendResponse, err := algodClient.SendRawTransaction(stx).Do(context.Background())
+	if err != nil {
+		fmt.Printf("failed to send transaction: %s\n", err)
+		return
+	}
+
+	confirmedTxn, err := future.WaitForConfirmation(algodClient, txid, 4, context.Background())
+	if err != nil {
+		fmt.Printf("Error waiting for confirmation on txID: %s\n", txid)
+		return
+	}
+	fmt.Printf("Confirmed Transaction: %s in Round %d\n", txid, confirmedTxn.ConfirmedRound)
+
+	return confirmedTxn
+}
