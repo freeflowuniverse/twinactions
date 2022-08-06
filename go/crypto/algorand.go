@@ -276,10 +276,12 @@ func clearAsset(algodClient *algod.Client, assetCreator [2]string, assetID uint6
 }
 
 //// Send Payment
+// 6 inputs, 0 returned
+
 // closeRemainderTo //https://developer.algorand.org/docs/get-details/transactions/transactions/#closeassetto:~:text=AssetCloseTo,of%20the%20asset).
 // unsure whether this field should be left as "" or given the sender's address //*********
 
-func makePayment(algodClient *algod.Client, paymentSender [2]string, receiverAddress string, amount int, paymentNote, closeRemainderTo string, ) {
+func makePayment(algodClient *algod.Client, paymentSender [2]string, receiverAddress string, amount int, paymentNote, closeRemainderTo string) {
 	
 	txParams, err := algodClient.SuggestedParams().Do(context.Background())
 	if err != nil {
