@@ -26,7 +26,6 @@ import (
 // README
 // There are a few issues in the code which I have marked with '//*********'
 
-
 // // Generate Account
 func generateAccount() {
 	account := crypto.GenerateAccount()
@@ -47,20 +46,19 @@ func generateAccount() {
 
 //// Create Asset
 // 12 inputs
-// 1 returned
+// 2 returned
 
 // Comments:
 // Input "" for manager, reserve, freeze, clawback if not desired.
 // I have no idea what the metadataHash is supposed to be
-// I don't know what to return in the event of exceptions //*********
 
-func createAsset(algodClient *algod.Client, creatorAccount [2]string, assetNote string, total uint32, decimals uint32, manager string, reserve string, freeze string, clawback string, assetName string, url string, metadataHash string) string {
+func createAsset(algodClient *algod.Client, creatorAccount [2]string, assetNote string, total uint32, decimals uint32, manager string, reserve string, freeze string, clawback string, assetName string, url string, metadataHash string) (string, error) {
 
 	// Get network-related transaction parameters and assign
 	txParams, err := algodClient.SuggestedParams().Do(context.Background())
 	if err != nil {
 		fmt.Printf("Error getting suggested tx params: %s\n", err)
-		return
+		return types.Transaction{}, err
 	}
 
 	// Set remaining parameters for asset creation
@@ -80,17 +78,22 @@ func createAsset(algodClient *algod.Client, creatorAccount [2]string, assetNote 
 
 	if err != nil {
 		fmt.Printf("Failed to create txn: %s\n", err)
-		return
+		return types.Transaction{}, err
 	}
 
-	confirmedTxn := signSendConfirm(creatorAccount, txn)
+	confirmedTxn, err := signSendConfirm(algodClient, creatorAccount, txn)
+	if err != nil {
+
+		fmt.Printf("Error in the signing, sending or confirmation processes: %s\n", err)
+		return types.Transaction{}, err
+	}
 
 	assetID := confirmedTxn.AssetIndex
 	// print created asset and asset holding info for this asset
 	fmt.Printf("Asset ID: %d\n", assetID)
 	printAsset(assetID, creatorAccount[0], algodClient)
 
-	return assetID
+	return assetID, nil
 }
 
 //// Modify Asset
@@ -126,10 +129,14 @@ func modifyAsset(algodClient *algod.Client, currentManager [2]string, assetNote 
 		return
 	}
 
-	signSendConfirm(currentManager, txn)
+	signSendConfirm(algodClient, currentManager, txn)
+	if err != nil {
+		fmt.Printf("Error in the signing, sending or confirmation processes: %s\n", err)
+		return
+	}
 
 	// print created assetinfo for this asset
-	printAsset(assetID, currentManager[0], algodClient)
+	//printAsset(assetID, currentManager[0], algodClient)
 
 }
 
@@ -160,18 +167,21 @@ func optinToAsset(algodClient *algod.Client, assetReceiver [2]string, optinNote 
 		fmt.Printf("Failed to create transaction MakeAssetAcceptanceTxn: %s\n", err)
 		return
 	}
-	signSendConfirm(assetReceiver, txn)
+	signSendConfirm(algodClient, assetReceiver, txn)
+	if err != nil {
+		fmt.Printf("Error in the signing, sending or confirmation processes: %s\n", err)
+		return
+	}
 
-	// print created assetholding for this asset and the asset receiver, showing 0 balance
-	fmt.Printf("Asset Receiver: %s\n", assetReceiver[0])
-	printAsset(assetID, assetReceiver[0], algodClient)
+	//fmt.Printf("Asset Receiver: %s\n", assetReceiver[0])
+	//printAsset(assetID, assetReceiver[0], algodClient)
 }
 
 //// Transfer Asset
 // closeRemainderTo //https://developer.algorand.org/docs/get-details/transactions/transactions/#closeassetto:~:text=AssetCloseTo,of%20the%20asset).
 // unsure whether this field should be left as "" or given the sender's address //*********
 
-func transferAsset(algodClient *algod.Client, sender [2]string, receiverAddress, closeRemainderTo string, amount uint32, optinNote string, assetID uint64) {
+func transferAsset(algodClient *algod.Client, sender [2]string, receiverAddress, amount uint32, optinNote string, assetID uint64) {
 
 	txParams, err := algodClient.SuggestedParams().Do(context.Background())
 	if err != nil {
@@ -181,7 +191,7 @@ func transferAsset(algodClient *algod.Client, sender [2]string, receiverAddress,
 
 	account := sender[0]
 	recipient := receiverAddress
-	closeAssetsTo := closeRemainderTo
+	closeAssetsTo := sender[0] // Should this be set to "" instead?
 	feePerByte := txParams.Fee
 	firstRound := txParams.FirstRoundValid
 	lastRound := txParams.LastRoundValid
@@ -196,11 +206,15 @@ func transferAsset(algodClient *algod.Client, sender [2]string, receiverAddress,
 		fmt.Printf("Failed to create transaction MakeAssetTransfer Txn: %s\n", err)
 		return
 	}
-	signSendConfirm(sender, txn)
+	signSendConfirm(algodClient, sender, txn)
+	if err != nil {
+		fmt.Printf("Error in the signing, sending or confirmation processes: %s\n", err)
+		return
+	}
 
-	fmt.Printf("Asset Sender: %s\n", sender[0])
-	fmt.Printf("Asset Recipient: %s\n", receiverAddress)
-	printAsset(assetID, receiverAddress, algodClient)
+	//fmt.Printf("Asset Sender: %s\n", sender[0])
+	//fmt.Printf("Asset Recipient: %s\n", receiverAddress)
+	//printAsset(assetID, receiverAddress, algodClient)
 
 }
 
@@ -231,10 +245,14 @@ func destroyAsset(algodClient *algod.Client, assetManager [2]string, destroyNote
 		return
 	}
 
-	signSendConfirm(account, txn)
+	signSendConfirm(algodClient, account, txn)
+	if err != nil {
+		fmt.Printf("Error in the signing, sending or confirmation processes: %s\n", err)
+		return
+	}
 
-	fmt.Printf("Asset ID: %d\n", assetID)
-	printAsset(assetID, assetManager[0], algodClient)
+	//fmt.Printf("Asset ID: %d\n", assetID)
+	//printAsset(assetID, assetManager[0], algodClient)
 	fmt.Printf("Account creater should issue a clearAsset transaction to clear the asset from the account holdings, \n")
 
 }
@@ -268,10 +286,14 @@ func clearAsset(algodClient *algod.Client, assetCreator [2]string, assetID uint6
 		fmt.Printf("Failed to create transaction MakeAssetTransfer Txn: %s\n", err)
 		return
 	}
-	signSendConfirm(assetCreator, txn)
+	signSendConfirm(algodClient, assetCreator, txn)
+	if err != nil {
+		fmt.Printf("Error in the signing, sending or confirmation processes: %s\n", err)
+		return
+	}
 
-	fmt.Printf("Asset Clearer: %s\n", assetCreator[0])
-	printAsset(assetID, assetCreator[0], algodClient)
+	//fmt.Printf("Asset Clearer: %s\n", assetCreator[0])
+	//printAsset(assetID, assetCreator[0], algodClient)
 
 }
 
@@ -281,8 +303,8 @@ func clearAsset(algodClient *algod.Client, assetCreator [2]string, assetID uint6
 // closeRemainderTo //https://developer.algorand.org/docs/get-details/transactions/transactions/#closeassetto:~:text=AssetCloseTo,of%20the%20asset).
 // unsure whether this field should be left as "" or given the sender's address //*********
 
-func makePayment(algodClient *algod.Client, paymentSender [2]string, receiverAddress string, amount int, paymentNote, closeRemainderTo string) {
-	
+func sendPayment(algodClient *algod.Client, paymentSender [2]string, receiverAddress string, amount int, paymentNote string) {
+
 	txParams, err := algodClient.SuggestedParams().Do(context.Background())
 	if err != nil {
 		fmt.Printf("Error getting suggested tx params: %s\n", err)
@@ -295,16 +317,20 @@ func makePayment(algodClient *algod.Client, paymentSender [2]string, receiverAdd
 	firstRound := txParams.FirstRoundValid
 	lastRound := txParams.LastRoundValid
 	note := []byte(paymentNote)
+	closeRemainderTo := paymentSender[0] // Should this be set to "" instead?
 	genesisID := txParams.GenesisID
 	genesisHash := txParams.GenesisHash
-
 
 	txn, err := transaction.MakePaymentTxn(from, to, fee, amount, firstRound, lastRound, note, closeRemainderTo, genesisID, genesisHash)
 	if err != nil {
 		fmt.Printf("Failed to create transaction MakePaymentTxn Txn: %s\n", err)
 		return
-
-	signSendConfirm(paymentSender, txn)
+	}
+	signSendConfirm(algodClient, paymentSender, txn)
+	if err != nil {
+		fmt.Printf("Error in the signing, sending or confirmation processes: %s\n", err)
+		return
+	}
 
 	fmt.Printf("Payment Sender: %s\n", paymentSender[0])
 	fmt.Printf("Payment Receiver: %s\n", receiverAddress)
@@ -344,27 +370,28 @@ func printAsset(assetID uint64, address string, client *algod.Client) {
 }
 
 //// Sign, Send, Confirm
+// 3 inputs, 2 returned
 
-func signSendConfirm(account [2]string, txn types.Transaction) types.Transaction {
+func signSendConfirm(algodClient *algod.Client, account [2]string, txn types.Transaction) (types.Transaction, error) {
 	txid, stx, err := crypto.SignTransaction(account[1], txn)
 	if err != nil {
 		fmt.Printf("Failed to sign transaction: %s\n", err)
-		return
+		return types.Transaction{}, err
 	}
 
 	// Broadcast the transaction to the network
 	sendResponse, err := algodClient.SendRawTransaction(stx).Do(context.Background())
 	if err != nil {
 		fmt.Printf("Failed to send transaction: %s\n", err)
-		return
+		return types.Transaction{}, err
 	}
 
 	confirmedTxn, err := future.WaitForConfirmation(algodClient, txid, 4, context.Background())
 	if err != nil {
 		fmt.Printf("Error waiting for confirmation on txID: %s\n", txid)
-		return
+		return types.Transaction{}, err
 	}
 	fmt.Printf("Confirmed Transaction: %s in Round %d\n", txid, confirmedTxn.ConfirmedRound)
 
-	return confirmedTxn
+	return confirmedTxn, nil
 }
