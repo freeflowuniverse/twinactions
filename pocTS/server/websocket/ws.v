@@ -3,10 +3,10 @@ module websocket
 import net.websocket as ws
 import term
 import json
+import x.json2
 
 pub fn serve()?{
-	mut s := ws.new_server(.ip6, 8081, '')
-	s.ping_interval = 100
+	mut s := ws.new_server(.ip6, 8081, '/')
 	s.on_connect(fn (mut s ws.ServerClient) ?bool {
 		if s.resource_name != '/' {
 			return false
@@ -15,8 +15,10 @@ pub fn serve()?{
 		return true
 	})?
 	s.on_message(fn (mut ws ws.Client, msg &ws.Message) ? {
-		response := handle_message(msg)?
-		ws.write(response.payload, response.opcode) or { panic(err) } // send back the response to the client.
+		if msg.payload != [] {
+			response := handle_message(msg)?
+			ws.write(response.payload, response.opcode) or { panic(err) } // send back the response to the client.
+		}
 	})
 	s.on_close(fn (mut ws ws.Client, code int, reason string) ? {
 		println(term.green('client ($ws.id) closed connection'))
@@ -35,7 +37,7 @@ pub fn serve()?{
 
 fn handle_message(msg &ws.Message) ?&ws.Message {
 	println('Received new message: ${msg.payload.bytestr()}')
-	payload := handle_events(msg.payload)
+	payload := handle_events(msg.payload)?
 	response := ws.Message{
 		opcode: msg.opcode
 		payload: payload
@@ -44,12 +46,22 @@ fn handle_message(msg &ws.Message) ?&ws.Message {
 	return &response
 }
 
-fn handle_events(payload []u8) []u8 {
+fn handle_events(payload []u8)? []u8 {
 	// TODO: handle_events based on event type and id.
+	mut result 	:= map[string]string
+	loaded 	:= json2.raw_decode(payload.bytestr())?
+	event 	:= loaded.as_map()['event'] or { panic(no_event) }
+	data 	:= loaded.as_map()['data'] or { panic(no_data) }
+	if event.str() == 'client_connected' {
+		result['data'] = data.str()
+		result['function'] = "getTwinBalance"
+	}
+	else if event.str() == 'getTwinBalance'{
+		println(data)
+	}
 	response := json.encode(CLMessage{
-		id: 1
-		eventtype: 'question_choice'
+		event: 'client_connected'
+		data: result
 	})
-
 	return response.bytes()
 }

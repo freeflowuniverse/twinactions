@@ -13,11 +13,12 @@ struct ServerOpt {
 }
 
 struct CLMessage {
-	id          int
-	eventtype 	string
+	event string
+	data map[string]string
 }
 
 enum Events {
+	client_connected
 	calculate_address_balance
 	calculate_addresses_balances
 }
@@ -25,6 +26,6 @@ enum Events {
 type EventsChoice = Events | string
 
 struct EventsModel {
-	id             int
-	servicetype    string
+	id           int
+	eventtype    string
 }
