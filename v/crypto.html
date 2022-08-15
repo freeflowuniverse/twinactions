@@ -1,0 +1,527 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Crypto - twinhandler</title>
+        <!-- Custom HTML head -->
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../intro.html"><strong aria-hidden="true">1.</strong> Intro</a></li><li class="chapter-item expanded "><a href="../v/index.html"><strong aria-hidden="true">2.</strong> V API</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../v/crypto.html" class="active"><strong aria-hidden="true">2.1.</strong> Crypto</a></li><li class="chapter-item expanded "><a href="../v/tfgrid.html"><strong aria-hidden="true">2.2.</strong> TFGrid</a></li><li class="chapter-item expanded "><a href="../v/twinactions.html"><strong aria-hidden="true">2.3.</strong> Core</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">twinhandler</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="module-crypto"><a class="header" href="#module-crypto">module crypto</a></h1>
+<h1 id="blockchain-actions-crypto"><a class="header" href="#blockchain-actions-crypto">Blockchain Actions (crypto)</a></h1>
+<h2 id="contents"><a class="header" href="#contents">Contents</a></h2>
+<ul>
+<li><a href="#account_delete">account_delete</a></li>
+<li><a href="#account_init">account_init</a></li>
+<li><a href="#asset_burn">asset_burn</a></li>
+<li><a href="#asset_create">asset_create</a></li>
+<li><a href="#asset_delete">asset_delete</a></li>
+<li><a href="#asset_mint">asset_mint</a></li>
+<li><a href="#buy">buy</a></li>
+<li><a href="#defi_pool_deposit">defi_pool_deposit</a></li>
+<li><a href="#defi_pool_info">defi_pool_info</a></li>
+<li><a href="#defi_pool_withdraw">defi_pool_withdraw</a></li>
+<li><a href="#defi_pool_withdraw_all">defi_pool_withdraw_all</a></li>
+<li><a href="#info">info</a></li>
+<li><a href="#orderbook_info">orderbook_info</a></li>
+<li><a href="#sell">sell</a></li>
+<li><a href="#send">send</a></li>
+<li><a href="#trade_delete">trade_delete</a></li>
+<li><a href="#trade_delete_all">trade_delete_all</a></li>
+<li><a href="#trade_info">trade_info</a></li>
+<li><a href="#AccountArgs">AccountArgs</a></li>
+<li><a href="#AccountAsset">AccountAsset</a></li>
+<li><a href="#AccountInfo">AccountInfo</a></li>
+<li><a href="#AssetBurnArgs">AssetBurnArgs</a></li>
+<li><a href="#AssetCreateArgs">AssetCreateArgs</a></li>
+<li><a href="#AssetDeleteArgs">AssetDeleteArgs</a></li>
+<li><a href="#AssetMintArgs">AssetMintArgs</a></li>
+<li><a href="#BuyActionArg">BuyActionArg</a></li>
+<li><a href="#DefiPoolDepositArgs">DefiPoolDepositArgs</a></li>
+<li><a href="#DefiPoolIdentity">DefiPoolIdentity</a></li>
+<li><a href="#DefiPoolInfo">DefiPoolInfo</a></li>
+<li><a href="#DefiPoolInfoPairInfo">DefiPoolInfoPairInfo</a></li>
+<li><a href="#DefiPoolWithDrawArgs">DefiPoolWithDrawArgs</a></li>
+<li><a href="#MultiSig">MultiSig</a></li>
+<li><a href="#OrderBookInfo">OrderBookInfo</a></li>
+<li><a href="#OrderBookInfoArgs">OrderBookInfoArgs</a></li>
+<li><a href="#OrderBookInfoPair">OrderBookInfoPair</a></li>
+<li><a href="#SellActionArg">SellActionArg</a></li>
+<li><a href="#SendArgs">SendArgs</a></li>
+<li><a href="#TradeInfoPair">TradeInfoPair</a></li>
+</ul>
+<h2 id="account_delete"><a class="header" href="#account_delete">account_delete</a></h2>
+<pre><code class="language-v">fn account_delete(name string) ?
+</code></pre>
+<p>delete account on the handler in case it was already initialized, does not give error if not active yet if multisignature more than one will have to do</p>
+<p><a href="#Contents">[Return to contents]</a></p>
+<h2 id="account_init"><a class="header" href="#account_init">account_init</a></h2>
+<pre><code class="language-v">fn account_init(args AccountArgs) ?
+</code></pre>
+<p>init the account on the action handler will give error if it already exists and mneomonic or type different will also give error if an error to create it e.g. wrong mnemonic the account will be selected, which means all actions done after are done on this account</p>
+<p><a href="#Contents">[Return to contents]</a></p>
+<h2 id="asset_burn"><a class="header" href="#asset_burn">asset_burn</a></h2>
+<pre><code class="language-v">fn asset_burn(args AssetBurnArgs) ?
+</code></pre>
+<p>destroy some of the tokens of the asset multisignature is used when asset was multisignature</p>
+<p><a href="#Contents">[Return to contents]</a></p>
+<h2 id="asset_create"><a class="header" href="#asset_create">asset_create</a></h2>
+<pre><code class="language-v">fn asset_create(args AssetCreateArgs) ?
+</code></pre>
+<p><a href="#Contents">[Return to contents]</a></p>
+<h2 id="asset_delete"><a class="header" href="#asset_delete">asset_delete</a></h2>
+<pre><code class="language-v">fn asset_delete(args AssetDeleteArgs) ?
+</code></pre>
+<p>deletes the asset, checks the multisignature approach</p>
+<p><a href="#Contents">[Return to contents]</a></p>
+<h2 id="asset_mint"><a class="header" href="#asset_mint">asset_mint</a></h2>
+<pre><code class="language-v">fn asset_mint(args AssetMintArgs) ?
+</code></pre>
+<p>mint amount of tokens of the asset multisignature is used when asset was multisignature</p>
+<p><a href="#Contents">[Return to contents]</a></p>
+<h2 id="buy"><a class="header" href="#buy">buy</a></h2>
+<pre><code class="language-v">fn buy(args BuyActionArg) ?string
+</code></pre>
+<p>set of actions to buy an asset everything is re-calculated to USD pricing of USD comes from the blockchain (only stellar/algorand) the action server will execute in the background and return a uid4 identifier, which can be used to check sometimes the blockchain supports a deadline, sometimes the action handler will have to do it</p>
+<pre><code>pub struct BuyActionArg {
+	asset_buy string 		// the asset you want to buy
+	max_price_usd	f64		//maximum price your want to  biy for
+	expirationtime_min	u16 //max time in minutes, the trade stays open
+	memo       string 		// per type blockchain we need to check that memo
+							field is not too long, is not everywhere used
+}
+</code></pre>
+<p><a href="#Contents">[Return to contents]</a></p>
+<h2 id="defi_pool_deposit"><a class="header" href="#defi_pool_deposit">defi_pool_deposit</a></h2>
+<pre><code class="language-v">fn defi_pool_deposit(account string, args DefiPoolDepositArgs) ?
+</code></pre>
+<p>set of arguments to create, or add to a DEFIPool</p>
+<p>pool can exist or it can be a new one if there is already money, you will just add to it</p>
+<p><a href="#Contents">[Return to contents]</a></p>
+<h2 id="defi_pool_info"><a class="header" href="#defi_pool_info">defi_pool_info</a></h2>
+<pre><code class="language-v">fn defi_pool_info(args DefiPoolIdentity) ?DefiPoolInfo
+</code></pre>
+<p>get all info from defi pool</p>
+<p><a href="#Contents">[Return to contents]</a></p>
+<h2 id="defi_pool_withdraw"><a class="header" href="#defi_pool_withdraw">defi_pool_withdraw</a></h2>
+<pre><code class="language-v">fn defi_pool_withdraw(account string, args DefiPoolWithDrawArgs) ?
+</code></pre>
+<p>withdraw money from the pool need to specify which currency and amount per currency</p>
+<p><a href="#Contents">[Return to contents]</a></p>
+<h2 id="defi_pool_withdraw_all"><a class="header" href="#defi_pool_withdraw_all">defi_pool_withdraw_all</a></h2>
+<pre><code class="language-v">fn defi_pool_withdraw_all(account string, args DefiPoolIdentity) ?
+</code></pre>
+<p>withdraw money from the pool, do the maximum the purpose is to get all your money out from the pool the handler need to implement the logic to take all out</p>
+<p><a href="#Contents">[Return to contents]</a></p>
+<h2 id="info"><a class="header" href="#info">info</a></h2>
+<pre><code class="language-v">fn info(name string) ?AccountInfo
+</code></pre>
+<p>return info about your account, the name is the name of the account as used in .account_init() the info returned</p>
+<pre><code class="language-v">pub struct AccountInfo {
+	pubkey_bin     []u8 // binary form of key
+	pubkey_ed25519 ed25519.PublicKey // can be empty, if not same type, but often it is
+	assets         []Asset
+}
+pub struct AccountAsset {
+	amount   f64
+	currency string // always lowercase
+}
+</code></pre>
+<p><a href="#Contents">[Return to contents]</a></p>
+<h2 id="orderbook_info"><a class="header" href="#orderbook_info">orderbook_info</a></h2>
+<pre><code class="language-v">fn orderbook_info(account string, args OrderBookInfoArgs) ?string
+</code></pre>
+<p>returns all relevant info from an orderbook</p>
+<p><a href="#Contents">[Return to contents]</a></p>
+<h2 id="sell"><a class="header" href="#sell">sell</a></h2>
+<pre><code class="language-v">fn sell(args SellActionArg) ?string
+</code></pre>
+<p>set of actions to sell an asset everything is re-calculated to USD, the money you get back is in USDC pricing of USD comes from the blockchain (only stellar/algorand) the action server will execute in the background and return a uid4 identifier, which can be used to check sometimes the blockchain supports a deadline, sometimes the action handler will have to do it</p>
+<pre><code>pub struct SellActionArg {
+	asset_sell string 			// the asset you want to sell
+	min_price_usd      f64    	// min price your want to sell for always in USDC
+	expirationtime_min	u16 	// max time in minutes, the trade stays open
+	memo       string 			// per type blockchain we need to check that memo
+								field is not too long, is not everywhere used
+}
+</code></pre>
+<p><a href="#Contents">[Return to contents]</a></p>
+<h2 id="send"><a class="header" href="#send">send</a></h2>
+<pre><code class="language-v">fn send(args SendArgs) ?
+</code></pre>
+<p>send money to a user on the chosen blockchain network the account used is the one who is selected</p>
+<pre><code>SendArgs {
+		account string
+		to string
+		amount f64
+		memo string
+		currency string
+}
+``` multisig is supported, if account is multisig, the the needed needs to be done
+
+[[Return to contents]](#Contents)
+
+## trade_delete
+```v
+fn trade_delete(account string, uid string) ?TradeInfoPair
+</code></pre>
+<p>dlete an open trade, the uid is unique uid is uid4, and as given by sales/buy order creation</p>
+<p><a href="#Contents">[Return to contents]</a></p>
+<h2 id="trade_delete_all"><a class="header" href="#trade_delete_all">trade_delete_all</a></h2>
+<pre><code class="language-v">fn trade_delete_all(account string) ?TradeInfoPair
+</code></pre>
+<p>delete all you open trades</p>
+<p><a href="#Contents">[Return to contents]</a></p>
+<h2 id="trade_info"><a class="header" href="#trade_info">trade_info</a></h2>
+<pre><code class="language-v">fn trade_info(account string, uid string) ?TradeInfoPair
+</code></pre>
+<p>returns all relevant info from an orderbook uid is uid4, and as given by sales/buy order creation</p>
+<p><a href="#Contents">[Return to contents]</a></p>
+<h2 id="accountargs"><a class="header" href="#accountargs">AccountArgs</a></h2>
+<pre><code class="language-v">struct AccountArgs {
+pub:
+	name           string
+	mnemonic       string
+	blockchaintype BlockchainType
+	expiration     int = 300 // will expire default 5 min
+	multisig       MultiSig // optional
+}
+</code></pre>
+<p><a href="#Contents">[Return to contents]</a></p>
+<h2 id="accountasset"><a class="header" href="#accountasset">AccountAsset</a></h2>
+<pre><code class="language-v">struct AccountAsset {
+	amount   f64
+	currency string // always lowercase
+}
+</code></pre>
+<p><a href="#Contents">[Return to contents]</a></p>
+<h2 id="accountinfo"><a class="header" href="#accountinfo">AccountInfo</a></h2>
+<pre><code class="language-v">struct AccountInfo {
+	pubkey_bin     []u8 // binary form of key
+	pubkey_ed25519 ed25519.PublicKey // can be empty, if not same type, but often it is
+	assets         []Asset
+}
+</code></pre>
+<p><a href="#Contents">[Return to contents]</a></p>
+<h2 id="assetburnargs"><a class="header" href="#assetburnargs">AssetBurnArgs</a></h2>
+<pre><code class="language-v">struct AssetBurnArgs {
+pub:
+	account    string
+	name       string
+	burnamount f64
+}
+</code></pre>
+<p><a href="#Contents">[Return to contents]</a></p>
+<h2 id="assetcreateargs"><a class="header" href="#assetcreateargs">AssetCreateArgs</a></h2>
+<pre><code class="language-v">struct AssetCreateArgs {
+pub:
+	account string
+	name    string
+	// TODO specify
+	multisig MultiSig // optional
+}
+</code></pre>
+<p><a href="#Contents">[Return to contents]</a></p>
+<h2 id="assetdeleteargs"><a class="header" href="#assetdeleteargs">AssetDeleteArgs</a></h2>
+<pre><code class="language-v">struct AssetDeleteArgs {
+pub:
+	account string
+	name    string
+}
+</code></pre>
+<p><a href="#Contents">[Return to contents]</a></p>
+<h2 id="assetmintargs"><a class="header" href="#assetmintargs">AssetMintArgs</a></h2>
+<pre><code class="language-v">struct AssetMintArgs {
+pub:
+	account    string
+	name       string
+	mintamount f64
+}
+</code></pre>
+<p><a href="#Contents">[Return to contents]</a></p>
+<h2 id="buyactionarg"><a class="header" href="#buyactionarg">BuyActionArg</a></h2>
+<pre><code class="language-v">struct BuyActionArg {
+	account            string
+	asset_buy          string // the asset you want to buy
+	max_price_usd      f64    // maximum price your want to buy for
+	expirationtime_min u16    // max time in minutes, the trade stays open
+	memo               string // per type blockchain we need to check that memo field
+	// is not too long, is not everywhere used
+}
+</code></pre>
+<p><a href="#Contents">[Return to contents]</a></p>
+<h2 id="defipooldepositargs"><a class="header" href="#defipooldepositargs">DefiPoolDepositArgs</a></h2>
+<pre><code class="language-v">struct DefiPoolDepositArgs {
+	poolasset1 string // a pool has 2 assets, this is the first one
+	amount1    f64
+	currency1  string
+	poolasset2 string // a pool has 2 assets, this is the first one
+	amount2    f64
+	currency2  string
+	memo       string // per type blockchain we need to check that memo field is not too long, is not everywhere used
+}
+</code></pre>
+<p>set of arguments to create, or add to a DEFIPool this is for an AMM DEFI pool (Automatic Market Making DEFI Pool)</p>
+<p><a href="#Contents">[Return to contents]</a></p>
+<h2 id="defipoolidentity"><a class="header" href="#defipoolidentity">DefiPoolIdentity</a></h2>
+<pre><code class="language-v">struct DefiPoolIdentity {
+	poolasset1 string // a pool has 2 assets, this is the first one
+	poolasset2 string
+}
+</code></pre>
+<p>identify a pool, is unique, the order of asset 1 or 2 does not matter</p>
+<p><a href="#Contents">[Return to contents]</a></p>
+<h2 id="defipoolinfo"><a class="header" href="#defipoolinfo">DefiPoolInfo</a></h2>
+<pre><code class="language-v">struct DefiPoolInfo {
+	pairs []DefiPoolInfoPairInfo // is always 2, need to check this is correct
+	// TODO what else is important here?
+}
+</code></pre>
+<p><a href="#Contents">[Return to contents]</a></p>
+<h2 id="defipoolinfopairinfo"><a class="header" href="#defipoolinfopairinfo">DefiPoolInfoPairInfo</a></h2>
+<pre><code class="language-v">struct DefiPoolInfoPairInfo {
+	currency string
+	amount   f64
+	// TODO what else is important here?
+}
+</code></pre>
+<p><a href="#Contents">[Return to contents]</a></p>
+<h2 id="defipoolwithdrawargs"><a class="header" href="#defipoolwithdrawargs">DefiPoolWithDrawArgs</a></h2>
+<pre><code class="language-v">struct DefiPoolWithDrawArgs {
+	poolasset1 string // a pool has 2 assets, this is the first one
+	amount1    f64
+	currency1  string
+	poolasset2 string // a pool has 2 assets, this is the first one
+	amount2    f64
+	currency2  string
+	memo       string // per type blockchain we need to check that memo field is not too long, is not everywhere used
+}
+</code></pre>
+<p>withdraw money from the pool need to specify which currency and amount per currency</p>
+<p><a href="#Contents">[Return to contents]</a></p>
+<h2 id="multisig"><a class="header" href="#multisig">MultiSig</a></h2>
+<pre><code class="language-v">struct MultiSig {
+pub:
+	pubkeys       []string // the pubkeys of who needs to sign
+	min_signature i16      // how many need minimally to sign
+}
+</code></pre>
+<p><a href="#Contents">[Return to contents]</a></p>
+<h2 id="orderbookinfo"><a class="header" href="#orderbookinfo">OrderBookInfo</a></h2>
+<pre><code class="language-v">struct OrderBookInfo {
+pub mut:
+	pairs []OrderBookInfoPair
+}
+</code></pre>
+<p><a href="#Contents">[Return to contents]</a></p>
+<h2 id="orderbookinfoargs"><a class="header" href="#orderbookinfoargs">OrderBookInfoArgs</a></h2>
+<pre><code class="language-v">struct OrderBookInfoArgs {
+pub mut:
+	only_my_orders bool = true
+}
+</code></pre>
+<p><a href="#Contents">[Return to contents]</a></p>
+<h2 id="orderbookinfopair"><a class="header" href="#orderbookinfopair">OrderBookInfoPair</a></h2>
+<pre><code class="language-v">struct OrderBookInfoPair {
+pub mut:
+	currency1 string
+	// TODO specify	
+}
+</code></pre>
+<p><a href="#Contents">[Return to contents]</a></p>
+<h2 id="sellactionarg"><a class="header" href="#sellactionarg">SellActionArg</a></h2>
+<pre><code class="language-v">struct SellActionArg {
+	account            string
+	asset_sell         string // the asset you want to sell
+	min_price_usd      f64    // min price your want to sell for always in USDC
+	expirationtime_min u16    // max time in minutes, the trade stays open
+	memo               string // per type blockchain we need to check that memo field is not too long, is not everywhere used
+}
+</code></pre>
+<p><a href="#Contents">[Return to contents]</a></p>
+<h2 id="sendargs"><a class="header" href="#sendargs">SendArgs</a></h2>
+<pre><code class="language-v">struct SendArgs {
+	account  string // the account we are sending info from
+	to       string
+	amount   f64
+	currency string
+	memo     string // per type blockchain we need to check that memo field is not too long
+}
+</code></pre>
+<p><a href="#Contents">[Return to contents]</a></p>
+<h2 id="tradeinfopair"><a class="header" href="#tradeinfopair">TradeInfoPair</a></h2>
+<pre><code class="language-v">struct TradeInfoPair {
+pub mut:
+	// TODO specify	
+	state TradeState
+}
+</code></pre>
+<p><a href="#Contents">[Return to contents]</a></p>
+<h4 id="powered-by-vdoc"><a class="header" href="#powered-by-vdoc">Powered by vdoc.</a></h4>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../v/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                            <a rel="next" href="../v/tfgrid.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../v/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                    <a rel="next" href="../v/tfgrid.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+    </body>
+</html>

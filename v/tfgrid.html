@@ -1,0 +1,381 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>TFGrid - twinhandler</title>
+        <!-- Custom HTML head -->
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../intro.html"><strong aria-hidden="true">1.</strong> Intro</a></li><li class="chapter-item expanded "><a href="../v/index.html"><strong aria-hidden="true">2.</strong> V API</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../v/crypto.html"><strong aria-hidden="true">2.1.</strong> Crypto</a></li><li class="chapter-item expanded "><a href="../v/tfgrid.html" class="active"><strong aria-hidden="true">2.2.</strong> TFGrid</a></li><li class="chapter-item expanded "><a href="../v/twinactions.html"><strong aria-hidden="true">2.3.</strong> Core</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">twinhandler</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="module-tfgrid"><a class="header" href="#module-tfgrid">module tfgrid</a></h1>
+<h1 id="tfgrid-workload-deployment"><a class="header" href="#tfgrid-workload-deployment">TFGrid workload deployment</a></h1>
+<blockquote>
+<p>inspired by: https://library.threefold.me/info/manual/#/manual3_iac/grid3_javascript</p>
+</blockquote>
+<p>this client allows deployment of all kinds of workloads on TFGrid</p>
+<ul>
+<li>kubernetes</li>
+<li>vm</li>
+<li>zdb</li>
+<li>networks</li>
+<li>qsfs (quantum safe filesystem)</li>
+<li>kvs (key value stor)</li>
+<li>gateways</li>
+<li>...</li>
+</ul>
+<blockquote>
+<p>TODO: </p>
+</blockquote>
+<h2 id="principles"><a class="header" href="#principles">Principles</a></h2>
+<p>The metadata we need to remember is stored in the KVS on TFChain (encrypted by the private key of the account).
+This metadata is important it has all info in relation to workloads we have deployed, where are they deployed, ...</p>
+<h2 id="todo"><a class="header" href="#todo">TODO</a></h2>
+<ul>
+<li>key value stor on tfchain</li>
+<li>most of primitives</li>
+<li>how to do capacity planning using the TFGrid Proxy</li>
+</ul>
+<h2 id="contents"><a class="header" href="#contents">Contents</a></h2>
+<ul>
+<li><a href="#account_delete">account_delete</a></li>
+<li><a href="#account_init">account_init</a></li>
+<li><a href="#vm_create">vm_create</a></li>
+<li><a href="#vm_delete">vm_delete</a></li>
+<li><a href="#vm_info">vm_info</a></li>
+<li><a href="#zdb_create">zdb_create</a></li>
+<li><a href="#zdb_delete">zdb_delete</a></li>
+<li><a href="#zdb_info">zdb_info</a></li>
+<li><a href="#ZDBMode">ZDBMode</a></li>
+<li><a href="#AccountArgs">AccountArgs</a></li>
+<li><a href="#IPRange">IPRange</a></li>
+<li><a href="#MultiSig">MultiSig</a></li>
+<li><a href="#VMArgs">VMArgs</a></li>
+<li><a href="#VMDisk">VMDisk</a></li>
+<li><a href="#VMInfo">VMInfo</a></li>
+<li><a href="#VMNet">VMNet</a></li>
+<li><a href="#ZDBArgs">ZDBArgs</a></li>
+<li><a href="#ZDBInfo">ZDBInfo</a></li>
+</ul>
+<h2 id="account_delete"><a class="header" href="#account_delete">account_delete</a></h2>
+<pre><code class="language-v">fn account_delete(name string) ?
+</code></pre>
+<p>delete account on the handler in case it was already initialized, does not give error if not active yet if multisignature more than one will have to do</p>
+<p><a href="#Contents">[Return to contents]</a></p>
+<h2 id="account_init"><a class="header" href="#account_init">account_init</a></h2>
+<pre><code class="language-v">fn account_init(args AccountArgs)
+</code></pre>
+<p>init the account on the action handler for TFGrid will give error if it already exists and mneomonic or type different will also give error if an error to create it e.g. wrong mnemonic the account will be selected, which means all actions done after are done on this account</p>
+<p><a href="#Contents">[Return to contents]</a></p>
+<h2 id="vm_create"><a class="header" href="#vm_create">vm_create</a></h2>
+<pre><code class="language-v">fn vm_create(args VMArgs) ?
+</code></pre>
+<p>init the account on the action handler for TFGrid will give error if it already exists and mneomonic or type different will also give error if an error to create it e.g. wrong mnemonic the account will be selected, which means all actions done after are done on this account</p>
+<p><a href="#Contents">[Return to contents]</a></p>
+<h2 id="vm_delete"><a class="header" href="#vm_delete">vm_delete</a></h2>
+<pre><code class="language-v">fn vm_delete(name string) ?
+</code></pre>
+<p><a href="#Contents">[Return to contents]</a></p>
+<h2 id="vm_info"><a class="header" href="#vm_info">vm_info</a></h2>
+<pre><code class="language-v">fn vm_info(name string) ?VMInfo
+</code></pre>
+<p>get object info from a deployed ZDB namespace</p>
+<p><a href="#Contents">[Return to contents]</a></p>
+<h2 id="zdb_create"><a class="header" href="#zdb_create">zdb_create</a></h2>
+<pre><code class="language-v">fn zdb_create(args ZDBArgs) ?
+</code></pre>
+<p>init the account on the action handler for TFGrid will give error if it already exists and mneomonic or type different will also give error if an error to create it e.g. wrong mnemonic the account will be selected, which means all actions done after are done on this account</p>
+<p><a href="#Contents">[Return to contents]</a></p>
+<h2 id="zdb_delete"><a class="header" href="#zdb_delete">zdb_delete</a></h2>
+<pre><code class="language-v">fn zdb_delete(name string) ?
+</code></pre>
+<p><a href="#Contents">[Return to contents]</a></p>
+<h2 id="zdb_info"><a class="header" href="#zdb_info">zdb_info</a></h2>
+<pre><code class="language-v">fn zdb_info(name string) ?ZDBInfo
+</code></pre>
+<p>get object info from a deployed ZDB namespace</p>
+<p><a href="#Contents">[Return to contents]</a></p>
+<h2 id="zdbmode"><a class="header" href="#zdbmode">ZDBMode</a></h2>
+<pre><code class="language-v">enum ZDBMode {
+	user
+	seq
+}
+</code></pre>
+<p><a href="#Contents">[Return to contents]</a></p>
+<h2 id="accountargs"><a class="header" href="#accountargs">AccountArgs</a></h2>
+<pre><code class="language-v">struct AccountArgs {
+pub:
+	name       string
+	mnemonic   string // private key in mnemonic form to be able to work on the right TFGrid net (TFChain)
+	nettype    TFGridNet
+	expiration int = 300 // will expire default 5 min
+	multisig   MultiSig // optional, not implemented yet in TFGrid
+}
+</code></pre>
+<p><a href="#Contents">[Return to contents]</a></p>
+<h2 id="iprange"><a class="header" href="#iprange">IPRange</a></h2>
+<pre><code class="language-v">struct IPRange {
+pub:
+	range string = '10.10.0.0'
+	mask  i16    = 16
+}
+</code></pre>
+<p><a href="#Contents">[Return to contents]</a></p>
+<h2 id="multisig"><a class="header" href="#multisig">MultiSig</a></h2>
+<pre><code class="language-v">struct MultiSig {
+pub:
+	pubkeys       []string // the pubkeys of who needs to sign
+	min_signature i16      // how many need minimally to sign
+}
+</code></pre>
+<p>used for when we do smart contract for IT with multiple people</p>
+<p><a href="#Contents">[Return to contents]</a></p>
+<h2 id="vmargs"><a class="header" href="#vmargs">VMArgs</a></h2>
+<pre><code class="language-v">struct VMArgs {
+pub:
+	name        string
+	disks       []VMDisk
+	network     VMNet
+	node_id     u32  // id of the node where this VM needs to be deployed
+	public_ip   bool // connect virtual machine to public internet, this VM will receive an IP address
+	planetary   bool // connect the virtual machine to the planetary network
+	cpu         u8   // nr of cpu cores 1...16
+	memory      u16  // MB of ram e.g. 1024*2 would be 2 GB
+	rootfs_size u16    = 1 // GB of root filesystem
+	flist       string = 'https://hub.grid.tf/tf-official-apps/base:latest.flist'
+	entrypoint  string = '/sbin/zinit init'
+	env         map[string]string // environment variables as passed to VM
+	ssh_key     string // default ssh_key is alias to SSH_KEY in env
+}
+</code></pre>
+<p><a href="#Contents">[Return to contents]</a></p>
+<h2 id="vmdisk"><a class="header" href="#vmdisk">VMDisk</a></h2>
+<pre><code class="language-v">struct VMDisk {
+pub:
+	name       string = 'default'
+	size       i16    = 8 // GB size of disk
+	mountpoint string = '/testdisk'
+}
+</code></pre>
+<p><a href="#Contents">[Return to contents]</a></p>
+<h2 id="vminfo"><a class="header" href="#vminfo">VMInfo</a></h2>
+<pre><code class="language-v">struct VMInfo {
+pub:
+	name        string
+	disks       []VMDisk
+	network     VMNet
+	node_id     u32  // id of the node where this VM needs to be deployed
+	public_ip   bool // connect virtual machine to public internet, this VM will receive an IP address
+	planetary   bool // connect the virtual machine to the planetary network
+	cpu         u8   // nr of cpu cores 1...16
+	memory      u16  // MB of ram e.g. 1024*2 would be 2 GB
+	rootfs_size u16    = 1 // GB of root filesystem
+	flist       string = 'https://hub.grid.tf/tf-official-apps/base:latest.flist'
+	entrypoint  string = '/sbin/zinit init'
+	env         map[string]string // environment variables as passed to VM
+	ssh_key     string // default ssh_key is alias to SSH_KEY in env
+}
+</code></pre>
+<p>TODO what info comes back?</p>
+<p><a href="#Contents">[Return to contents]</a></p>
+<h2 id="vmnet"><a class="header" href="#vmnet">VMNet</a></h2>
+<pre><code class="language-v">struct VMNet {
+pub:
+	name  string
+	range IPRange
+}
+</code></pre>
+<p>network needs to correspond to network created on nodes, otherwise this will not work</p>
+<p><a href="#Contents">[Return to contents]</a></p>
+<h2 id="zdbargs"><a class="header" href="#zdbargs">ZDBArgs</a></h2>
+<pre><code class="language-v">struct ZDBArgs {
+pub:
+	name      string
+	node_id   u32 // id of the node where this ZDB namespace needs to be deployed
+	mode      ZDBMode
+	disk_size u16 = 9
+	public    bool   // a public namespace can be read-only if a password is set
+	password  string // password as set on the namespace
+}
+</code></pre>
+<p><a href="#Contents">[Return to contents]</a></p>
+<h2 id="zdbinfo"><a class="header" href="#zdbinfo">ZDBInfo</a></h2>
+<pre><code class="language-v">struct ZDBInfo {
+pub:
+	name      string
+	node_id   u32 // id of the node where this ZDB namespace needs to be deployed
+	mode      ZDBMode
+	disk_size u16 = 9
+	public    bool   // a public namespace can be read-only if a password is set
+	password  string // password as set on the namespace
+}
+</code></pre>
+<p>TODO what info comes back?</p>
+<p><a href="#Contents">[Return to contents]</a></p>
+<h4 id="powered-by-vdoc"><a class="header" href="#powered-by-vdoc">Powered by vdoc.</a></h4>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../v/crypto.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                            <a rel="next" href="../v/twinactions.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../v/crypto.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                    <a rel="next" href="../v/twinactions.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+    </body>
+</html>
