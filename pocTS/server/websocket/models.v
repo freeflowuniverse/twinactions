@@ -3,7 +3,6 @@ module websocket
 import log
 
 
-
 struct ServerOpt {
 	logger &log.Logger = &log.Logger(
 		&log.Log{
@@ -14,7 +13,7 @@ struct ServerOpt {
 
 struct CLMessage {
 	event string
-	data map[string]string
+	data EventsModel
 }
 
 enum Events {
@@ -26,6 +25,7 @@ enum Events {
 type EventsChoice = Events | string
 
 struct EventsModel {
-	id           int
-	eventtype    string
+	mut: 
+		function string
+		args string
 }

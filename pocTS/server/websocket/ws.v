@@ -16,8 +16,7 @@ pub fn serve()?{
 	})?
 	s.on_message(fn (mut ws ws.Client, msg &ws.Message) ? {
 		if msg.payload != [] {
-			response := handle_message(msg)?
-			ws.write(response.payload, response.opcode) or { panic(err) } // send back the response to the client.
+			handle_events(msg, mut ws)?
 		}
 	})
 	s.on_close(fn (mut ws ws.Client, code int, reason string) ? {
@@ -27,41 +26,29 @@ pub fn serve()?{
 	unsafe {
 		s.free()
 	}
-
-	// addresses := [
-	// 	"GB37FSNVWTMEOL4VD3SCMMTDVAB6VIA6STL4BUHB3FF3CVYXNNHWRJU2",
-	// 	"GARPUGX3FM6RWC2Q3CVNHD62XJAY36QWFSPF6P67GOBWLSK5WHSRZOLV",
-	// 	"GDLGVXZMILA5HE2X34FLIPGB7OWQMHESFFFAEBE5PUQSPFYRIJ4TON7K"
-	// ]
 }
 
-fn handle_message(msg &ws.Message) ?&ws.Message {
-	println('Received new message: ${msg.payload.bytestr()}')
-	payload := handle_events(msg.payload)?
-	response := ws.Message{
-		opcode: msg.opcode
-		payload: payload
-	}
-
-	return &response
-}
-
-fn handle_events(payload []u8)? []u8 {
+fn handle_events(msg &ws.Message, mut c ws.Client)? {
 	// TODO: handle_events based on event type and id.
-	mut result 	:= map[string]string
-	loaded 	:= json2.raw_decode(payload.bytestr())?
+	mut data := EventsModel{}
+	loaded 	:= json2.raw_decode(msg.payload.bytestr())?
 	event 	:= loaded.as_map()['event'] or { panic(no_event) }
-	data 	:= loaded.as_map()['data'] or { panic(no_data) }
-	if event.str() == 'client_connected' {
-		result['data'] = data.str()
-		result['function'] = "getTwinBalance"
+	if event.str() == 'client_connected'{
+		println(event)
 	}
-	else if event.str() == 'getTwinBalance'{
-		println(data)
+	else if event.str() == 'get_twin_balance'{
+		data.function = "balance.getMyBalance"
+		data.args = '{}'
+		response := ws.Message{
+			opcode: msg.opcode
+			payload: json.encode(CLMessage{
+				event: 'invoke'
+				data: data
+			}).bytes()
+		}
+		println(response)
+		c.write(response.payload, response.opcode) or { panic(err) } // send back the response to the client.
+	} else {
+		println(loaded)
 	}
-	response := json.encode(CLMessage{
-		event: 'client_connected'
-		data: result
-	})
-	return response.bytes()
 }
