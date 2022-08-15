@@ -45,6 +45,7 @@ fn handle_message(msg &ws.Message) ?&ws.Message {
 }
 
 fn handle_events(payload []u8) []u8 {
+	// TODO: handle_events based on event type and id.
 	response := json.encode(CLMessage{
 		id: 1
 		eventtype: 'question_choice'
