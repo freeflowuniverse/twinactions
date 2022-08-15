@@ -5426,10 +5426,10 @@ graceful-fs@^4.1.2, graceful-fs@^4.1.6, graceful-fs@^4.2.0, graceful-fs@^4.2.4, 
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.10.tgz#147d3a006da4ca3ce14728c7aefc287c367d7a6c"
   integrity sha512-9ByhssR2fPVsNZj478qUUbKfmL0+t5BDVyjShtyZZLiK7ZDAArFFfopyOTj0M05wE2tJPisA4iTnnXl2YoPvOA==
 
-grid3_client@^1.4.0-rc1:
-  version "1.4.0-rc1"
-  resolved "https://registry.yarnpkg.com/grid3_client/-/grid3_client-1.4.0-rc1.tgz#b2137c53f8cca4f511ddee1fd82476377ed3daaf"
-  integrity sha512-4Xi78nB36wITaHFnHQUG9KxuZvllxX0Ml3GDY+Y5z4CArRsOxNsqjSmlInPzePXKb+5d5TGHG/GlsyP5bAfg+g==
+grid3_client@^1.4.0-rc2:
+  version "1.4.0-rc2"
+  resolved "https://registry.yarnpkg.com/grid3_client/-/grid3_client-1.4.0-rc2.tgz#c9b91642c1e66302672f5d97a0f0ca2d85907101"
+  integrity sha512-xTkEdp3vyoAkoGlZYkNF2kp1PQlDQT6cGIRdQdkUMDaJgRrqD9apN9hVCr8k9N4D/RjqWumzp8kVwyORFYY/fg==
   dependencies:
     algosdk "^1.19.0"
     appdata-path "^1.0.0"
