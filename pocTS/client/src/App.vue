@@ -19,10 +19,7 @@
 
       <br />
 
-      <button type="submit" :disabled="!mnemonic || !secret || loading">
-        Calculate My Balance
-      </button>
-
+      <button type="submit">Calculate My Balance</button>
     </form>
   </div>
 </template>
@@ -30,7 +27,13 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 
-interface IData {
+interface IMessage {
+  id: string;
+  event: string;
+  data: string;
+}
+
+interface IInvokeRequest {
   function: string;
   args: string;
 }
@@ -49,10 +52,10 @@ export default class App extends Vue {
     const grid = await this.$grid(mnemonic, secret);
     const socket = await this.$socket();
     socket.send(
-      JSON.stringify({ event: "client_connected", data: {"id": 12} })
+      JSON.stringify({ event: "client_connected", data: `{ "id": 12 }` })
     );
     socket.send(
-      JSON.stringify({ event: "get_twin_balance", data: {"id": 12} })
+      JSON.stringify({ event: "get_my_balance", data: `{ "id": 12 }` })
     );
 
     this.loading = false;
@@ -61,18 +64,31 @@ export default class App extends Vue {
   async created() {
     const socket = await this.$socket();
 
-    socket.onmessage = async ({ data: _data }: { data: { data: IData } }) => {
-      console.log(_data);
-      
-      const { data } = JSON.parse(_data as unknown as string) as {
-        data: IData;
-      };
+    socket.onmessage = async (event: MessageEvent) => {
+      const data = JSON.parse(event.data) as IMessage;
       console.log(data);
 
-      const grid = await this.$grid(this.mnemonic, this.secret);
-      const result = await grid.invoke(data.function, JSON.parse(data.args));
+      if (data.event == "invoke") {
+        const req = JSON.parse(data.data) as IInvokeRequest;
+        const grid = await this.$grid(this.mnemonic, this.secret);
+        const result = await grid.invoke(req.function, JSON.parse(req.args));
+        // const result = {
+        //   free: 1.2,
+        //   reserved: 87.3,
+        //   miscFrozen: 2323.32,
+        //   feeFrozen: 23232.3232,
+        // };
 
-      socket.send(JSON.stringify({ event: "hamada", data: result }));
+        socket.send(
+          JSON.stringify({
+            id: data.id,
+            event: "invoke_result",
+            data: JSON.stringify(result),
+          })
+        );
+
+        console.log("result sent: ", result);
+      }
     };
   }
 }

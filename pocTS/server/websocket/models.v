@@ -11,9 +11,14 @@ struct ServerOpt {
 	)
 }
 
-struct CLMessage {
+// general message between client <-> server
+struct Message {
+	id string
+	// event type
 	event string
-	data EventsModel
+
+	// data as json
+	data string
 }
 
 enum Events {
@@ -22,10 +27,9 @@ enum Events {
 	calculate_addresses_balances
 }
 
-type EventsChoice = Events | string
-
-struct EventsModel {
-	mut: 
+struct InvokeRequest {
+	mut:
 		function string
+		// json encoded args
 		args string
 }
