@@ -13,33 +13,48 @@ type RawMessage = ws.Message
 struct TwinClient {
 	pub mut:
 		ws ws.Client
-		callbacks  map[string]ResultHandler
+		channels  map[string]chan Message
 }
 
 pub fn init_client (mut ws ws.Client) TwinClient {
-	mut callbacks := map[string]ResultHandler{}
-	ws.on_message(fn[mut callbacks] (mut c ws.Client, raw_msg &RawMessage)? {
-		msg := json.decode(Message, raw_msg.payload.bytestr()) or {
-			msgstr := raw_msg.payload.bytestr()
-			println("cannot decode message:  $msgstr")
+	mut tcl := TwinClient{
+		ws: ws,
+		channels: map[string]chan Message{}
+	}
+
+	ws.on_message(fn[mut tcl] (mut c ws.Client, raw_msg &RawMessage)? {
+		if raw_msg.payload.len == 0 {
 			return
 		}
+
+		// println("got a raw msg: $raw_msg")
+		msg := json.decode(Message, raw_msg.payload.bytestr()) or {
+			// msgstr := raw_msg.payload.bytestr()
+			println("cannot decode message payload")
+			return
+		}
+
 		if msg.event == "invoke_result" {
-			callback := callbacks[msg.id] or {
-				println("callback for $msg.id is not there")
+			println("processing invoke request")
+			channel := tcl.channels[msg.id] or {
+				println("channel for $msg.id is not there")
 				return
 			}
-			callback(msg)
+
+			println("pushing msg to channel: $msg.id")
+			channel <- msg
 		}
+
 	})
-	return TwinClient {
-		ws: ws
-		callbacks: callbacks
-	}
+
+	return tcl
 }
 
-fn (mut tcl TwinClient) invoke(functionPath string, args string, callback ResultHandler) ? {
+fn (mut tcl TwinClient) invoke(functionPath string, args string) ?Message {
        id := rand.uuid_v4()
+
+       channel := chan Message{}
+       tcl.channels[id] = channel
 
 		mut  req := InvokeRequest{}
 	   	req.function = "balance.getMyBalance"
@@ -54,21 +69,37 @@ fn (mut tcl TwinClient) invoke(functionPath string, args string, callback Result
 		).bytes()
 
 		tcl.ws.write(payload, .text_frame)?
-		tcl.register_callback(id, callback)
+		println("waiting for result...")
+		return tcl.wait(id)
 }
 
-fn (mut tcl TwinClient) register_callback(id string, callback ResultHandler) {
-	// might have a callback wrapper that removes the callback after calling it
-	// without errors
+fn (mut tcl TwinClient) wait(id string) ?Message {
+		if channel := tcl.channels[id] {
+			res := <-channel
+			channel.close()
+			tcl.channels.delete(id)
+			return res
+		}
 
-	// this does not compile
-	// tcl.callbacks[id] = fn[mut tcl, id, callback](msg Message) {
-	// 	callback(msg)
-	// 	tcl.callbacks.delete(id)
-	// }
-
-	tcl.callbacks[id] = callback
+		return error('wait channel of $id is not present')
 }
+
+fn (mut tcl TwinClient) get_my_balance(req RequestWithID) ?Balance {
+	ret := tcl.invoke("balance.getMyBalance", "{}")?
+	return json.decode(Balance, ret.data)
+}
+
+struct RequestWithAddress {
+pub:
+	address string
+}
+
+fn (mut tcl TwinClient) get_balance(req RequestWithAddress) ?Balance {
+	ret := tcl.invoke("balance.getMyBalance", json.encode(req))?
+	return json.decode(Balance, ret.data)
+}
+
+
 
 struct Balance {
 pub:
@@ -78,9 +109,6 @@ pub:
 	fee_frozen f64 [json: feeFrozen]
 }
 
-fn (mut tcl TwinClient) get_my_balance(req RequestWithID, callback ResultHandler) ? {
-	tcl.invoke("balance.getMyBalance", "{}", callback)?
-}
 
 pub fn serve()?{
 	mut s := ws.new_server(.ip6, 8081, '/')
@@ -109,39 +137,56 @@ pub:
 }
 
 fn handle_events(raw_msg &RawMessage, mut c ws.Client)? {
-	msg 	:= json.decode(Message, raw_msg.payload.bytestr())?
+	if raw_msg.payload.len == 0 {
+		return
+	}
+
+	println("got a raw msg: $raw_msg.payload $raw_msg.opcode")
+
+	mut client := init_client(mut c)
+	msg 	:= json.decode(Message, raw_msg.payload.bytestr()) or {
+		println("cannot decode message")
+		return
+	}
+
 
 	if msg.event == 'client_connected'{
 		println(msg.event)
-	} else if msg.event == "get_my_balance" {
-		mut client := init_client(mut c)
-		req := json.decode(RequestWithID, msg.data) or {
-			println("cannot decode req params: $msg.data")
-			return
-		}
-
-		callback := fn[mut c](msg Message) {
-			// here we decided to send the result back
-			// but we can do anything with this result
-			resp_msg := Message{
-				id: "anyidforresponse" // any id for resp
-				event: "balance_result"
-				data: msg.data
+	} else if msg.event == "sum_balances" {
+		addrs := [
+			"5CoairYXspX6MHeAFaJ9Ki3Fsj2sFXVHf11ymPXcsWX5a7Mw",
+			"5D8ByeiGwKJ5YiZZfKAduomE5fezcR4xMVEcwfTxYm67UBSE"
+		]
+		mut total := 0.0
+		for addr in addrs {
+			req := RequestWithAddress{
+				address: addr
 			}
-
-			payload := json.encode(resp_msg)
-			c.write(payload.bytes(), .text_frame) or {
-				println("cannot send payload")
+			balance := client.get_balance(req) or {
+				println("couldn't get balance: $err")
 				return
 			}
+
+			total += balance.free
 		}
 
-		client.get_my_balance(req, callback) or {
-			println("couldn't get balance: $err")
-			return err
+		// here we decided to send the result back
+		// but we can do anything with this result
+		resp_msg := Message{
+			id: "anyidforresponse" // any id for resp
+			event: "balance_result"
+			data: json.encode(total)
+		}
+
+		payload := json.encode(resp_msg)
+		c.write(payload.bytes(), .text_frame) or {
+			println("cannot send payload")
+			return
+
 		}
 
 	} else {
 		println("got a new message: $msg.event")
 	}
+
 }

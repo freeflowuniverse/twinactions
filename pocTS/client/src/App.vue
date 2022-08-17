@@ -21,14 +21,14 @@
 
       <div>
         <label>
-          <p>Your balance</p>
+          <p>Balance sum</p>
           <input type="text" placeholder="..." v-model="balance" />
         </label>
       </div>
 
       <br />
 
-      <button type="submit">Calculate My Balance</button>
+      <button type="submit">Sum balances</button>
     </form>
   </div>
 </template>
@@ -58,9 +58,8 @@ interface IBalanceResult {
   name: "App",
 })
 export default class App extends Vue {
-  mnemonic =
-    "hope exit room push virtual enough oyster image churn waste more west";
-  secret = "abdo1234";
+  mnemonic = "";
+  secret = "";
   loading = false;
   balance = 0.0;
 
@@ -73,7 +72,7 @@ export default class App extends Vue {
       JSON.stringify({ event: "client_connected", data: `{ "id": 12 }` })
     );
     socket.send(
-      JSON.stringify({ event: "get_my_balance", data: `{ "id": 12 }` })
+      JSON.stringify({ event: "sum_balances", data: `{ "id": 12 }` })
     );
 
     this.loading = false;
@@ -107,8 +106,8 @@ export default class App extends Vue {
 
         console.log("result sent: ", result);
       } else if (data.event == "balance_result") {
-        const result = JSON.parse(data.data) as IBalanceResult;
-        this.balance = result.free;
+        const result = JSON.parse(data.data) as number;
+        this.balance = result;
       }
     };
   }
