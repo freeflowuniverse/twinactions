@@ -19,6 +19,15 @@
 
       <br />
 
+      <div>
+        <label>
+          <p>Your balance</p>
+          <input type="text" placeholder="..." v-model="balance" />
+        </label>
+      </div>
+
+      <br />
+
       <button type="submit">Calculate My Balance</button>
     </form>
   </div>
@@ -38,13 +47,22 @@ interface IInvokeRequest {
   args: string;
 }
 
+interface IBalanceResult {
+  free: number;
+  reserved: number;
+  miscFrozen: number;
+  feeFrozen: number;
+}
+
 @Component({
   name: "App",
 })
 export default class App extends Vue {
-  mnemonic = "";
-  secret = "";
+  mnemonic =
+    "hope exit room push virtual enough oyster image churn waste more west";
+  secret = "abdo1234";
   loading = false;
+  balance = 0.0;
 
   async onSubmit() {
     this.loading = true;
@@ -88,6 +106,9 @@ export default class App extends Vue {
         );
 
         console.log("result sent: ", result);
+      } else if (data.event == "balance_result") {
+        const result = JSON.parse(data.data) as IBalanceResult;
+        this.balance = result.free;
       }
     };
   }

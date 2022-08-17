@@ -3,40 +3,43 @@ module websocket
 import net.websocket as ws
 import term
 import json
-import x.json2
 
 import rand
 
 
+type ResultHandler = fn (Message)
+type RawMessage = ws.Message
+
 struct TwinClient {
 	pub mut:
 		ws ws.Client
-		channels  map[string]chan Message
+		callbacks  map[string]ResultHandler
 }
 
 pub fn init_client (mut ws ws.Client) TwinClient {
-	mut channels := map[string]chan Message{}
-	ws.on_message(fn[channels] (mut c ws.Client, ws_msg &ws.Message)? {
-		println("got a message: $ws_msg")
-		msg := json.decode(Message, ws_msg.payload.bytestr()) or {
-			msgstr := ws_msg.payload.bytestr()
+	mut callbacks := map[string]ResultHandler{}
+	ws.on_message(fn[mut callbacks] (mut c ws.Client, raw_msg &RawMessage)? {
+		msg := json.decode(Message, raw_msg.payload.bytestr()) or {
+			msgstr := raw_msg.payload.bytestr()
 			println("cannot decode message:  $msgstr")
 			return
 		}
 		if msg.event == "invoke_result" {
-			channels[msg.id] <- msg
+			callback := callbacks[msg.id] or {
+				println("callback for $msg.id is not there")
+				return
+			}
+			callback(msg)
 		}
 	})
 	return TwinClient {
 		ws: ws
-		channels: channels
+		callbacks: callbacks
 	}
 }
 
-fn (mut tcl TwinClient) invoke(functionPath string, args string) ?string {
+fn (mut tcl TwinClient) invoke(functionPath string, args string, callback ResultHandler) ? {
        id := rand.uuid_v4()
-       channel := chan Message{}
-       tcl.channels[id] = channel
 
 		mut  req := InvokeRequest{}
 	   	req.function = "balance.getMyBalance"
@@ -51,18 +54,20 @@ fn (mut tcl TwinClient) invoke(functionPath string, args string) ?string {
 		).bytes()
 
 		tcl.ws.write(payload, .text_frame)?
-		println("sent req: $req")
-
-		ret_msg := tcl.wait(id)
-        return ret_msg.data
+		tcl.register_callback(id, callback)
 }
 
-fn (mut tcl TwinClient) wait(id string) Message {
-		channel := tcl.channels[id]
-		res := <-channel
-		channel.close()
-		tcl.channels.delete(id)
-		return res
+fn (mut tcl TwinClient) register_callback(id string, callback ResultHandler) {
+	// might have a callback wrapper that removes the callback after calling it
+	// without errors
+
+	// this does not compile
+	// tcl.callbacks[id] = fn[mut tcl, id, callback](msg Message) {
+	// 	callback(msg)
+	// 	tcl.callbacks.delete(id)
+	// }
+
+	tcl.callbacks[id] = callback
 }
 
 struct Balance {
@@ -73,9 +78,8 @@ pub:
 	fee_frozen f64 [json: feeFrozen]
 }
 
-fn (mut tcl TwinClient) get_my_balance(req RequestWithID) ?Balance {
-	data := tcl.invoke("balance.getMyBalance", "{}")?
-	return json.decode(Balance, data)
+fn (mut tcl TwinClient) get_my_balance(req RequestWithID, callback ResultHandler) ? {
+	tcl.invoke("balance.getMyBalance", "{}", callback)?
 }
 
 pub fn serve()?{
@@ -87,7 +91,7 @@ pub fn serve()?{
 		println('Client has connected...')
 		return true
 	})?
-	s.on_message(fn (mut ws ws.Client, msg &ws.Message) ? {
+	s.on_message(fn (mut ws ws.Client, msg &RawMessage) ? {
 		handle_events(msg, mut ws)?
 	})
 	s.on_close(fn (mut ws ws.Client, code int, reason string) ? {
@@ -104,38 +108,40 @@ pub:
 	id string
 }
 
-fn handle_events(ws_msg &ws.Message, mut c ws.Client)? {
-	// TODO: handle_events based on event type and id.
-	msg 	:= json.decode(Message, ws_msg.payload.bytestr())?
-	println("msg: $msg")
-	println("msg.event: $msg.event")
+fn handle_events(raw_msg &RawMessage, mut c ws.Client)? {
+	msg 	:= json.decode(Message, raw_msg.payload.bytestr())?
+
 	if msg.event == 'client_connected'{
 		println(msg.event)
-	}
-
-	else if msg.event == "get_my_balance" {
+	} else if msg.event == "get_my_balance" {
 		mut client := init_client(mut c)
 		req := json.decode(RequestWithID, msg.data) or {
 			println("cannot decode req params: $msg.data")
 			return
 		}
 
-		println("handling req: $req")
-		balance := client.get_my_balance(req) or {
+		callback := fn[mut c](msg Message) {
+			// here we decided to send the result back
+			// but we can do anything with this result
+			resp_msg := Message{
+				id: "anyidforresponse" // any id for resp
+				event: "balance_result"
+				data: msg.data
+			}
+
+			payload := json.encode(resp_msg)
+			c.write(payload.bytes(), .text_frame) or {
+				println("cannot send payload")
+				return
+			}
+		}
+
+		client.get_my_balance(req, callback) or {
 			println("couldn't get balance: $err")
 			return err
 		}
 
-		data := json.encode(balance)
-		resp_msg := Message{
-			id: "anyidforresponse" // any id for resp
-			event: "balance_result"
-			data: data
-		}
-
-		payload := json.encode(resp_msg)
-		c.write(payload.bytes(), ws_msg.opcode)?
 	} else {
-		println("unsupported type of event: $msg")
+		println("got a new message: $msg.event")
 	}
 }
