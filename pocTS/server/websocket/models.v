@@ -11,21 +11,4 @@ struct ServerOpt {
 	)
 }
 
-struct CLMessage {
-	event string
-	data EventsModel
-}
 
-enum Events {
-	client_connected
-	calculate_address_balance
-	calculate_addresses_balances
-}
-
-type EventsChoice = Events | string
-
-struct EventsModel {
-	mut: 
-		function string
-		args string
-}
