@@ -1,7 +1,7 @@
 module websocket
 
 import net.websocket as ws
-import twinclient2 as tw
+import freeflowuniverse.crystallib.twinclient2 as tw
 import term
 import json
 
