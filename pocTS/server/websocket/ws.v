@@ -1,113 +1,9 @@
 module websocket
 
 import net.websocket as ws
+import twinclient2 as tw
 import term
 import json
-
-import rand
-
-
-type ResultHandler = fn (Message)
-type RawMessage = ws.Message
-
-struct TwinClient {
-	pub mut:
-		ws ws.Client
-		channels  map[string]chan Message
-}
-
-pub fn init_client (mut ws ws.Client) TwinClient {
-	mut tcl := TwinClient{
-		ws: ws,
-		channels: map[string]chan Message{}
-	}
-
-	ws.on_message(fn[mut tcl] (mut c ws.Client, raw_msg &RawMessage)? {
-		if raw_msg.payload.len == 0 {
-			return
-		}
-
-		// println("got a raw msg: $raw_msg")
-		msg := json.decode(Message, raw_msg.payload.bytestr()) or {
-			// msgstr := raw_msg.payload.bytestr()
-			println("cannot decode message payload")
-			return
-		}
-
-		if msg.event == "invoke_result" {
-			println("processing invoke request")
-			channel := tcl.channels[msg.id] or {
-				println("channel for $msg.id is not there")
-				return
-			}
-
-			println("pushing msg to channel: $msg.id")
-			channel <- msg
-		}
-
-	})
-
-	return tcl
-}
-
-fn (mut tcl TwinClient) invoke(functionPath string, args string) ?Message {
-       id := rand.uuid_v4()
-
-       channel := chan Message{}
-       tcl.channels[id] = channel
-
-		mut  req := InvokeRequest{}
-	   	req.function = "balance.getMyBalance"
-		req.args = args
-
-		payload := json.encode(
-			Message{
-				id: id,
-				event: 'invoke'
-				data: json.encode(req)
-			}
-		).bytes()
-
-		tcl.ws.write(payload, .text_frame)?
-		println("waiting for result...")
-		return tcl.wait(id)
-}
-
-fn (mut tcl TwinClient) wait(id string) ?Message {
-		if channel := tcl.channels[id] {
-			res := <-channel
-			channel.close()
-			tcl.channels.delete(id)
-			return res
-		}
-
-		return error('wait channel of $id is not present')
-}
-
-fn (mut tcl TwinClient) get_my_balance(req RequestWithID) ?Balance {
-	ret := tcl.invoke("balance.getMyBalance", "{}")?
-	return json.decode(Balance, ret.data)
-}
-
-struct RequestWithAddress {
-pub:
-	address string
-}
-
-fn (mut tcl TwinClient) get_balance(req RequestWithAddress) ?Balance {
-	ret := tcl.invoke("balance.getMyBalance", json.encode(req))?
-	return json.decode(Balance, ret.data)
-}
-
-
-
-struct Balance {
-pub:
-	free f64
-	reserved f64
-	misc_frozen f64 [json: miscFrozen]
-	fee_frozen f64 [json: feeFrozen]
-}
 
 
 pub fn serve()?{
@@ -119,7 +15,7 @@ pub fn serve()?{
 		println('Client has connected...')
 		return true
 	})?
-	s.on_message(fn (mut ws ws.Client, msg &RawMessage) ? {
+	s.on_message(fn (mut ws ws.Client, msg &tw.RawMessage) ? {
 		handle_events(msg, mut ws)?
 	})
 	s.on_close(fn (mut ws ws.Client, code int, reason string) ? {
@@ -131,20 +27,15 @@ pub fn serve()?{
 	}
 }
 
-struct RequestWithID {
-pub:
-	id string
-}
-
-fn handle_events(raw_msg &RawMessage, mut c ws.Client)? {
+fn handle_events(raw_msg &tw.RawMessage, mut c ws.Client)? {
 	if raw_msg.payload.len == 0 {
 		return
 	}
 
 	println("got a raw msg: $raw_msg.payload $raw_msg.opcode")
 
-	mut client := init_client(mut c)
-	msg 	:= json.decode(Message, raw_msg.payload.bytestr()) or {
+	mut client := tw.init_client(mut c)
+	msg 	:= json.decode(tw.Message, raw_msg.payload.bytestr()) or {
 		println("cannot decode message")
 		return
 	}
@@ -153,36 +44,63 @@ fn handle_events(raw_msg &RawMessage, mut c ws.Client)? {
 	if msg.event == 'client_connected'{
 		println(msg.event)
 	} else if msg.event == "sum_balances" {
+		// machine := tw.Machine{'test2411822',
+		// 	2,
+		// 	[], 
+		// 	[], 
+		// 	false, 
+		// 	true, 
+		// 	2, 
+		// 	1024, 
+		// 	1, 
+		// 	"https://hub.grid.tf/tf-official-apps/base:latest.flist",
+		// 	"/sbin/zinit init",
+		// 	tw.Env{ssh_key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCa5srzZwh3ulajtY2EZ1SiPY1JNelcaP8O/FZqrnJi6OxAPijl0KzoNrzgemqxhAS/eIglBYbgQuw/Po15MtdMgXmfrtNgrZjQQtLxGFz5KmUbzawPGI7iRkN40LEo0y0hcGLV1G+YiNO+3YU7K5I+gos+04OUJe4HYjcp92nAEviqxa40po2f67KgP5xrZxaOpELZA/hIf1wCzCyTsdvu3k+hw1QlSTIso6WTcUw7LLssvxAs7JZ31kgx+L740xQJWsiVv/go3td0GuETfRSbfjBtOD/wIEHG5UtazOrR+8ukotqQ/ERWuyx1abaEKwro3fLunmjhfgDbnJYy7As1 ahmed@ahmed-Inspiron-3576"}
+		// 	}
+		// machines := tw.Machines {
+		// 	"test2411822", tw.Network{
+		// 		"10.20.0.0/16",
+		// 		"test24",
+		// 		false
+		// 	},
+		// 	[machine],
+		// 	"",
+		// 	""
+		// }
+		// response := client.import_wallet(name: "test241182", address: "", secret: "SACLKHTVC3K36GCW6EPN7DAXNLLWPWLSFDAMM4EV22KRF62JK342QISI")?
+
+		// response := client.deploy_machines(machines)? 
+		// println("address $response.address")
+		// response2 := client.balance_by_name("test241182")?
+		// println(response2[0].amount)
+		// response3 := client.list_wallets()?
+		// println(response3)
+
 		addrs := [
 			"5CoairYXspX6MHeAFaJ9Ki3Fsj2sFXVHf11ymPXcsWX5a7Mw",
 			"5D8ByeiGwKJ5YiZZfKAduomE5fezcR4xMVEcwfTxYm67UBSE"
 		]
 		mut total := 0.0
 		for addr in addrs {
-			req := RequestWithAddress{
-				address: addr
-			}
-			balance := client.get_balance(req) or {
+			balance := client.get_balance(addr) or {
 				println("couldn't get balance: $err")
 				return
 			}
 
 			total += balance.free
 		}
-
 		// here we decided to send the result back
 		// but we can do anything with this result
-		resp_msg := Message{
+		resp_msg := tw.Message{
 			id: "anyidforresponse" // any id for resp
 			event: "balance_result"
 			data: json.encode(total)
 		}
 
 		payload := json.encode(resp_msg)
-		c.write(payload.bytes(), .text_frame) or {
+		c.write_string(payload) or {
 			println("cannot send payload")
 			return
-
 		}
 
 	} else {
