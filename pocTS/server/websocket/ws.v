@@ -75,33 +75,34 @@ fn handle_events(raw_msg &tw.RawMessage, mut c ws.Client)? {
 		// println(response2[0].amount)
 		// response3 := client.list_wallets()?
 		// println(response3)
-
-		addrs := [
+		go fn [mut client]() {
+			addrs := [
 			"5CoairYXspX6MHeAFaJ9Ki3Fsj2sFXVHf11ymPXcsWX5a7Mw",
 			"5D8ByeiGwKJ5YiZZfKAduomE5fezcR4xMVEcwfTxYm67UBSE"
-		]
-		mut total := 0.0
-		for addr in addrs {
-			balance := client.get_balance(addr) or {
-				println("couldn't get balance: $err")
-				return
+			]
+			mut total := 0.0
+			for addr in addrs {
+				balance := client.get_balance(addr) or {
+					println("couldn't get balance: $err")
+					return
+				}
+
+				total += balance.free
+			}
+			// here we decided to send the result back
+			// but we can do anything with this result
+			resp_msg := tw.Message{
+				id: "anyidforresponse" // any id for resp
+				event: "balance_result"
+				data: json.encode(total)
 			}
 
-			total += balance.free
-		}
-		// here we decided to send the result back
-		// but we can do anything with this result
-		resp_msg := tw.Message{
-			id: "anyidforresponse" // any id for resp
-			event: "balance_result"
-			data: json.encode(total)
-		}
-
-		payload := json.encode(resp_msg)
-		c.write_string(payload) or {
-			println("cannot send payload")
-			return
-		}
+			payload := json.encode(resp_msg)
+			client.ws.write_string(payload) or {
+				println("cannot send payload: $err")
+				return
+			}
+		}()
 
 	} else {
 		println("got a new message: $msg.event")
