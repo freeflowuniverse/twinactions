@@ -47,7 +47,6 @@ fn handle_events(raw_msg &tw.RawMessage, mut c ws.Client)? {
 		return
 	}
 
-	println("got a: $raw_ms")
 	println("got a raw msg: $raw_msg.payload $raw_msg.opcode")
 
 	mut client := tw.init_client(mut c)
@@ -105,7 +104,6 @@ fn handle_events(raw_msg &tw.RawMessage, mut c ws.Client)? {
                 min: 0,
                 max: 0,
                 sign: false,
-				symbol: 'name'
                 answer: '',
               },
 			  websocket.QuestionInput{
