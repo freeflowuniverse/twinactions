@@ -2,6 +2,8 @@ module websocket
 
 type Any = int | string | bool
 
+// type Workload = Machine | K8s 
+
 // enum QType {
 //   form string = "zmachine"
 //   input
@@ -10,6 +12,29 @@ type Any = int | string | bool
 //   data
 //   choice
 // }
+
+// struct Answer {
+  // qid string
+// }
+
+struct QAnswer {
+// answer Answer
+  symbol string
+  value string
+}
+
+struct MachineSpecs {
+  vm_name string
+  memory int
+  root_fs int
+  cpu int
+  flist string
+  entrypoint string
+  env string
+  public_ip bool
+  planetary_ip bool
+}
+
 
 pub struct QTypes {
 pub:
@@ -41,6 +66,7 @@ struct QuestionInput {
   min int
   max int
   sign bool
+  symbol string
 
   answer Any
 }
@@ -50,6 +76,7 @@ struct QuestionYn {
   chat_id string
   question string
   id int
+  symbol string
 
   answer Any
 }
@@ -63,6 +90,7 @@ struct QuestionChoice {
   choices []Choice
   multi bool
   sign bool
+  symbol string
 
   answer Any
 }
@@ -76,6 +104,7 @@ struct QuestionDropdown {
   choices []Choice
   multi bool
   sign bool
+  symbol string
 
   answer Any
 }
@@ -84,6 +113,8 @@ struct QuestionDate {
   q_type QType
   id int
   question string
+  symbol string
+
   answer Any
 }
 

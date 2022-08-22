@@ -4,6 +4,8 @@ import net.websocket as ws
 import freeflowuniverse.crystallib.twinclient2 as tw
 import term
 import json
+import x.json2
+
 
 __global (
 
@@ -12,6 +14,7 @@ id=0
 
 pub fn serve()?{
 	mut s := ws.new_server(.ip6, 8081, '/')
+
 	s.on_connect(fn (mut s ws.ServerClient) ?bool {
 		if s.resource_name != '/' {
 			return false
@@ -19,13 +22,25 @@ pub fn serve()?{
 		println('Client has connected...')
 		return true
 	})?
+
 	s.on_message(fn (mut ws ws.Client, msg &tw.RawMessage) ? {
+
 		handle_events(msg, mut ws)?
+		// payload := json.encode(tw.Message{
+		// 	id: ''
+		// 	event: 'question'
+		// 	data: ''
+		// }).bytes()
+
+		// s.write(payload, .text_frame)?
 	})
+
 	s.on_close(fn (mut ws ws.Client, code int, reason string) ? {
 		println(term.green('client ($ws.id) closed connection'))
 	})
+
 	s.listen() or { println(term.red('error on server listen: $err')) }
+
 	unsafe {
 		s.free()
 	}
@@ -104,6 +119,7 @@ fn handle_events(raw_msg &tw.RawMessage, mut c ws.Client)? {
                 min: 0,
                 max: 0,
                 sign: false,
+				symbol: 'vm_name',
                 answer: '',
               },
 			  websocket.QuestionInput{
@@ -117,6 +133,7 @@ fn handle_events(raw_msg &tw.RawMessage, mut c ws.Client)? {
                 min: 0,
                 max: 0,
                 sign: false,
+				symbol: 'node_id',
                 answer: '',
               },
               websocket.QuestionYn{
@@ -124,6 +141,7 @@ fn handle_events(raw_msg &tw.RawMessage, mut c ws.Client)? {
                 chat_id: "0",
                 question: '### Public Ip',
                 id: id++,
+				symbol: 'public_ip',
                 answer: '',
               },
 			  websocket.QuestionYn{
@@ -131,6 +149,7 @@ fn handle_events(raw_msg &tw.RawMessage, mut c ws.Client)? {
                 chat_id: "0",
                 question: '### Planetry Ip',
                 id: id++,
+				symbol: 'planetry_ip',
                 answer: '',
               },
 			  websocket.QuestionInput{
@@ -144,6 +163,7 @@ fn handle_events(raw_msg &tw.RawMessage, mut c ws.Client)? {
                 min: 0,
                 max: 0,
                 sign: false,
+				symbol: 'cpu',
                 answer: '',
               },
 			  websocket.QuestionInput{
@@ -157,6 +177,7 @@ fn handle_events(raw_msg &tw.RawMessage, mut c ws.Client)? {
                 min: 0,
                 max: 0,
                 sign: false,
+				symbol: 'memory',
                 answer: '',
               },
 			  websocket.QuestionInput{
@@ -170,6 +191,7 @@ fn handle_events(raw_msg &tw.RawMessage, mut c ws.Client)? {
                 min: 0,
                 max: 0,
                 sign: false,
+				symbol: 'root_fs',
                 answer: '',
               },
 			  websocket.QuestionInput{
@@ -183,6 +205,7 @@ fn handle_events(raw_msg &tw.RawMessage, mut c ws.Client)? {
                 min: 0,
                 max: 0,
                 sign: false,
+				symbol: 'flist',
                 answer: '',
               },
 			  websocket.QuestionInput{
@@ -196,12 +219,13 @@ fn handle_events(raw_msg &tw.RawMessage, mut c ws.Client)? {
                 min: 0,
                 max: 0,
                 sign: false,
+				symbol: 'entrypoint',
                 answer: '',
               },
 			  websocket.QuestionInput{
                 q_type: websocket.q_types.input,
                 id: id++,
-                question: '### Environment Variables',
+                question: '### SSH Key',
                 descr: '',
                 returntype: 'string',
                 regex: '.*',
@@ -209,6 +233,7 @@ fn handle_events(raw_msg &tw.RawMessage, mut c ws.Client)? {
                 min: 0,
                 max: 0,
                 sign: false,
+				symbol: 'ssh_key',
                 answer: '',
               },
 
@@ -291,45 +316,43 @@ fn handle_events(raw_msg &tw.RawMessage, mut c ws.Client)? {
 			}
 		}()
 
-	} else if msg.event == "echo" {
-		println("deployvm")
-		println("resp: $msg.data")
-
-		/*
-		- send symbol with the q
-		- {id: { symbol: "memory", value: answer}}
-		- encode to defined structs
-		- construct the machine(s)
-		
-		*/
-
-		// resp := msg.data.
-		// println(resp)
-	// machine := tw.Machine{'test2411822',
-	// 			2,
-	// 			[], 
-	// 			[], 
-	// 			false, 
-	// 			true, 
-	// 			2, 
-	// 			1024, 
-	// 			1, 
-	// 			"https://hub.grid.tf/tf-official-apps/base:latest.flist",
-	// 			"/sbin/zinit init",
-	// 			tw.Env{ssh_key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCa5srzZwh3ulajtY2EZ1SiPY1JNelcaP8O/FZqrnJi6OxAPijl0KzoNrzgemqxhAS/eIglBYbgQuw/Po15MtdMgXmfrtNgrZjQQtLxGFz5KmUbzawPGI7iRkN40LEo0y0hcGLV1G+YiNO+3YU7K5I+gos+04OUJe4HYjcp92nAEviqxa40po2f67KgP5xrZxaOpELZA/hIf1wCzCyTsdvu3k+hw1QlSTIso6WTcUw7LLssvxAs7JZ31kgx+L740xQJWsiVv/go3td0GuETfRSbfjBtOD/wIEHG5UtazOrR+8ukotqQ/ERWuyx1abaEKwro3fLunmjhfgDbnJYy7As1 ahmed@ahmed-Inspiron-3576"}
-	// 			}
-	// 		machines := tw.Machines {
-	// 			"test2411822", tw.Network{
-	// 				"10.20.0.0/16",
-	// 				"test24",
-	// 				false
-	// 			},
-	// 			[machine],
-	// 			"",
-	// 			""
-	// 		}
-
 	
+	} else if msg.event == "echo" {
+
+		data := json2.raw_decode(msg.data)?
+		vm := data.as_map()
+
+		machines := tw.Machines{
+			name: vm["vm_name"]?.str()
+			network: tw.Network{
+				ip_range: '10.200.0.0/16'
+				name: 'net3'
+				add_access: false
+				}
+			machines: [
+				tw.Machine{
+					name: vm["vm_name"]?.str()
+					node_id: vm["node_id"]?.str().u32()
+					disks: []
+					qsfs_disks: []
+					public_ip: vm["public_ip"]?.bool()
+					planetary: vm["planetry_ip"]?.bool()
+					cpu: vm["cpu"]?.str().u32()
+					memory: vm["memory"]?.str().u64()
+					rootfs_size: vm["root_fs"]?.str().u64()
+					flist: vm["flist"]?.str()
+					entrypoint: vm["entrypoint"]?.str()
+					env: tw.Env{
+						ssh_key: vm["ssh_key"]?.str()
+					}
+				}
+			]
+		}
+		println(machines)
+
+    	response := client.deploy_machines(machines)?
+		println(response)
+
 	} else {
 		println("got a new message: $msg.event")
 	}
