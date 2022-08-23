@@ -137,5 +137,29 @@ const deploy_machines_form = websocket.Form{
 		},
 
 	],
+	symbol: "vm_specs"
 	sign: false
+}
+
+const list_services_question = QuestionChoice{
+  q_type: q_types.choices,
+  question: "Choose a services",
+  id: id++
+  descr: "services"
+  sorted: true
+  choices: [
+	Choice{
+		value: "deploy_vm_form",
+		title: "Deploy VM",
+	},
+	Choice{
+		value: "ping",
+		title: "Ping",
+	}
+  ]
+  multi: false,
+  sign: false,
+  symbol: "service",
+
+  answer: "",
 }

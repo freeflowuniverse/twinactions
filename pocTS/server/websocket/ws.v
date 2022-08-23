@@ -120,19 +120,15 @@ fn handle_events(raw_msg &tw.RawMessage, mut c ws.Client)? {
 		}()
 	} else if msg.event == "deploy_vm_form" {
 
-		logs := Log{
-			id: 0
-			msg: "Fill Form"
+		res := Response{
+			logs: Log{
+				id: 0
+				msg: "Fill Form"
+			},
+			question: deploy_machines_form
 		}
 		
-		qs := deploy_machines_form
-
-		res_form := Response{
-			logs: logs,
-			question: qs
-		}
-		
-		payload := json.encode(res_form)
+		payload := json.encode(res)
 		client.ws.write_string(payload) or {
 			println("cannot send payload: $err")
 			return
@@ -176,6 +172,21 @@ fn handle_events(raw_msg &tw.RawMessage, mut c ws.Client)? {
     	response := client.deploy_machines(machines)?
 		println(response)
 
+	} else if msg.event == "services_list" {
+		
+		res := Response{
+			logs: Log{
+				id: 0
+				msg: "Choose service"
+			},
+			question: list_services_question
+		}
+		
+		payload := json.encode(res)
+		client.ws.write_string(payload) or {
+			println("cannot send payload: $err")
+			return
+		}
 	} else {
 		println("got a new message: $msg.event")
 	}

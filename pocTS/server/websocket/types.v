@@ -14,7 +14,7 @@ struct Log {
  
 struct Response {
 	logs Log
-	question Form
+	question Questions
 }
 
 /*
@@ -110,6 +110,7 @@ struct Form {
   description string
   form []Questions
   sign bool
+  symbol string
 }
 
-type Questions = QuestionInput | QuestionYn | QuestionChoice | QuestionDropdown | QuestionDate
+type Questions = QuestionInput | QuestionYn | QuestionChoice | QuestionDropdown | QuestionDate | Form
