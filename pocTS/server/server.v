@@ -8,13 +8,13 @@ struct App {
 
 fn main() {
 
-	go ws.serve()
-	// implement the same functionality of nest.ts server
+	// run the websocket server on a routine
+	// go ws.serve()
+	ws.serve()?
 
-	mut app := &App{}
-
-	app.serve_static('/', 'public/index.html')
-	app.handle_static('public', true)
-
-	vweb.run(app, 5000)
+	// run the http server (for serving frontend)
+	// mut app := &App{}
+	// app.serve_static('/', 'public/index.html')
+	// app.handle_static('public', true)
+	// vweb.run(app, 5000)
 }

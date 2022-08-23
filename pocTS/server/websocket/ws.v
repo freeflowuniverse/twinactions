@@ -8,8 +8,7 @@ import x.json2
 
 
 __global (
-
-id=0
+	id=0
 )
 
 pub fn serve()?{
@@ -24,15 +23,7 @@ pub fn serve()?{
 	})?
 
 	s.on_message(fn (mut ws ws.Client, msg &tw.RawMessage) ? {
-
 		handle_events(msg, mut ws)?
-		// payload := json.encode(tw.Message{
-		// 	id: ''
-		// 	event: 'question'
-		// 	data: ''
-		// }).bytes()
-
-		// s.write(payload, .text_frame)?
 	})
 
 	s.on_close(fn (mut ws ws.Client, code int, reason string) ? {
@@ -46,214 +37,26 @@ pub fn serve()?{
 	}
 }
 
-struct Log {
-	id int
-	msg string
-}
- 
-struct Response {
-	logs Log
-	question Form
-}
-
-
 fn handle_events(raw_msg &tw.RawMessage, mut c ws.Client)? {
+
+	// println("got a raw msg: $raw_msg.payload $raw_msg.opcode")
+
+	mut client := tw.init_client(mut c)
+
 	if raw_msg.payload.len == 0 {
 		return
 	}
-
-	println("got a raw msg: $raw_msg.payload $raw_msg.opcode")
-
-	mut client := tw.init_client(mut c)
 	msg 	:= json.decode(tw.Message, raw_msg.payload.bytestr()) or {
 		println("cannot decode message")
 		return
 	}
+	println("msg.event: $msg.event")
+
+
 
 	if msg.event == 'client_connected'{
 		println(msg.event)
 
-	} else if msg.event == "task" {
-
-		/*
-		cp the dist
-		client.deploy_vm(specs)
-		send mini-form Q to client >> construct the data to vm specs
-		*/
-
-		println(msg.event)
-
-		logs := Log{
-			id: 0
-			msg: "Fill Form"
-		}
-
-		/*
-		name
-		node_id
-		public_ip
-		planetary
-		cpu
-		memory
-		rootfs_size
-		flist
-		entrypoint
-		env
-		*/
-		
-		qs := websocket.Form{
-			q_type: websocket.q_types.form,
-			question: '# Deploy a Virtual Machine',
-			chat_id: "0",
-			id: 10,
-			description: 'VM Deployment Spces',
-			form: [
-				websocket.QuestionInput{
-                q_type: websocket.q_types.input,
-                id: id++,
-                question: '### What is the name of your VM?',
-                descr: 'VM Name',
-                returntype: 'string',
-                regex: '.*',
-                regex_errormsg: '',
-                min: 0,
-                max: 0,
-                sign: false,
-				symbol: 'vm_name',
-                answer: '',
-              },
-			  websocket.QuestionInput{
-                q_type: websocket.q_types.input,
-                id: id++,
-                question: '### Node ID',
-                descr: '',
-                returntype: 'string',
-                regex: '.*',
-                regex_errormsg: '',
-                min: 0,
-                max: 0,
-                sign: false,
-				symbol: 'node_id',
-                answer: '',
-              },
-              websocket.QuestionYn{
-                q_type: websocket.q_types.yn,
-                chat_id: "0",
-                question: '### Public Ip',
-                id: id++,
-				symbol: 'public_ip',
-                answer: '',
-              },
-			  websocket.QuestionYn{
-                q_type: websocket.q_types.yn,
-                chat_id: "0",
-                question: '### Planetry Ip',
-                id: id++,
-				symbol: 'planetry_ip',
-                answer: '',
-              },
-			  websocket.QuestionInput{
-                q_type: websocket.q_types.input,
-                id: id++,
-                question: '### CPU Cores',
-                descr: '',
-                returntype: 'string',
-                regex: '.*',
-                regex_errormsg: '',
-                min: 0,
-                max: 0,
-                sign: false,
-				symbol: 'cpu',
-                answer: '',
-              },
-			  websocket.QuestionInput{
-                q_type: websocket.q_types.input,
-                id: id++,
-                question: '### Memory in MB',
-                descr: '',
-                returntype: 'string',
-                regex: '.*',
-                regex_errormsg: '',
-                min: 0,
-                max: 0,
-                sign: false,
-				symbol: 'memory',
-                answer: '',
-              },
-			  websocket.QuestionInput{
-                q_type: websocket.q_types.input,
-                id: id++,
-                question: '### Root FS in GB',
-                descr: '',
-                returntype: 'string',
-                regex: '.*',
-                regex_errormsg: '',
-                min: 0,
-                max: 0,
-                sign: false,
-				symbol: 'root_fs',
-                answer: '',
-              },
-			  websocket.QuestionInput{
-                q_type: websocket.q_types.input,
-                id: id++,
-                question: '### Flist',
-                descr: '',
-                returntype: 'string',
-                regex: '.*',
-                regex_errormsg: '',
-                min: 0,
-                max: 0,
-                sign: false,
-				symbol: 'flist',
-                answer: '',
-              },
-			  websocket.QuestionInput{
-                q_type: websocket.q_types.input,
-                id: id++,
-                question: '### Entrypoint',
-                descr: '',
-                returntype: 'string',
-                regex: '.*',
-                regex_errormsg: '',
-                min: 0,
-                max: 0,
-                sign: false,
-				symbol: 'entrypoint',
-                answer: '',
-              },
-			  websocket.QuestionInput{
-                q_type: websocket.q_types.input,
-                id: id++,
-                question: '### SSH Key',
-                descr: '',
-                returntype: 'string',
-                regex: '.*',
-                regex_errormsg: '',
-                min: 0,
-                max: 0,
-                sign: false,
-				symbol: 'ssh_key',
-                answer: '',
-              },
-
-			],
-			sign: false
-		}
-
-		res_form := Response{
-			logs: logs,
-			question: qs
-		}
-		
-
-	
-		payload := json.encode(res_form)
-		client.ws.write_string(payload) or {
-			println("cannot send payload: $err")
-			return
-		}
-		
 	} else if msg.event == "sum_balances" {
 		
 		// machine := tw.Machine{'test2411822',
@@ -315,10 +118,30 @@ fn handle_events(raw_msg &tw.RawMessage, mut c ws.Client)? {
 				return
 			}
 		}()
+	} else if msg.event == "deploy_vm_form" {
 
+		logs := Log{
+			id: 0
+			msg: "Fill Form"
+		}
+		
+		qs := deploy_machines_form
+
+		res_form := Response{
+			logs: logs,
+			question: qs
+		}
+		
+		payload := json.encode(res_form)
+		client.ws.write_string(payload) or {
+			println("cannot send payload: $err")
+			return
+		}
 	
-	} else if msg.event == "echo" {
+	} else if msg.event == "deploy_vm" {
 
+		println(msg.data)
+		
 		data := json2.raw_decode(msg.data)?
 		vm := data.as_map()
 
@@ -356,5 +179,4 @@ fn handle_events(raw_msg &tw.RawMessage, mut c ws.Client)? {
 	} else {
 		println("got a new message: $msg.event")
 	}
-
 }
