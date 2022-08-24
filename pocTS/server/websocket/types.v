@@ -11,10 +11,11 @@ struct Log {
 	id int
 	msg string
 }
- 
+
 struct Response {
-	logs Log
-	question Questions
+  event string
+  log string
+  question Questions
 }
 
 /*

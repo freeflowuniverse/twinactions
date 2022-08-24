@@ -11,6 +11,15 @@ __global (
 	id=0
 )
 
+fn echo(mut client tw.TwinClient, log Response)? {
+	// print in server
+	println(log.log)
+
+	// push logs to client
+	payload := json.encode(log)
+	client.ws.write_string(payload)?
+}
+
 pub fn serve()?{
 	mut s := ws.new_server(.ip6, 8081, '/')
 
@@ -51,7 +60,6 @@ fn handle_events(raw_msg &tw.RawMessage, mut c ws.Client)? {
 		return
 	}
 	println("msg.event: $msg.event")
-
 
 
 	if msg.event == 'client_connected'{
@@ -121,22 +129,13 @@ fn handle_events(raw_msg &tw.RawMessage, mut c ws.Client)? {
 	} else if msg.event == "deploy_vm_form" {
 
 		res := Response{
-			logs: Log{
-				id: 0
-				msg: "Fill Form"
-			},
+			event: "question"
 			question: deploy_machines_form
 		}
 		
-		payload := json.encode(res)
-		client.ws.write_string(payload) or {
-			println("cannot send payload: $err")
-			return
-		}
+		echo(mut client, res)?
 	
 	} else if msg.event == "deploy_vm" {
-
-		println(msg.data)
 		
 		data := json2.raw_decode(msg.data)?
 		vm := data.as_map()
@@ -167,26 +166,25 @@ fn handle_events(raw_msg &tw.RawMessage, mut c ws.Client)? {
 				}
 			]
 		}
-		println(machines)
+		echo(mut client, Response{
+			event: "echo"
+			log: json.encode(machines)
+		})?
 
     	response := client.deploy_machines(machines)?
-		println(response)
+		echo(mut client, Response{
+			event: "echo"
+			log: json.encode(response)
+		})?
 
 	} else if msg.event == "services_list" {
 		
 		res := Response{
-			logs: Log{
-				id: 0
-				msg: "Choose service"
-			},
+			event: "question"
 			question: list_services_question
 		}
 		
-		payload := json.encode(res)
-		client.ws.write_string(payload) or {
-			println("cannot send payload: $err")
-			return
-		}
+		echo(mut client, res)?
 	} else {
 		println("got a new message: $msg.event")
 	}

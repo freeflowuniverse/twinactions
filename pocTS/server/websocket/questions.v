@@ -19,7 +19,7 @@ const deploy_machines_form = websocket.Form{
 		max: 0,
 		sign: false,
 		symbol: 'vm_name',
-		answer: '',
+		answer: 'testvm',
 		},
 		websocket.QuestionInput{
 		q_type: websocket.q_types.input,
@@ -33,7 +33,7 @@ const deploy_machines_form = websocket.Form{
 		max: 0,
 		sign: false,
 		symbol: 'node_id',
-		answer: '',
+		answer: '11',
 		},
 		websocket.QuestionYn{
 		q_type: websocket.q_types.yn,
@@ -41,7 +41,7 @@ const deploy_machines_form = websocket.Form{
 		question: '### Public Ip',
 		id: id++,
 		symbol: 'public_ip',
-		answer: '',
+		answer: false,
 		},
 		websocket.QuestionYn{
 		q_type: websocket.q_types.yn,
@@ -49,7 +49,7 @@ const deploy_machines_form = websocket.Form{
 		question: '### Planetry Ip',
 		id: id++,
 		symbol: 'planetry_ip',
-		answer: '',
+		answer: true,
 		},
 		websocket.QuestionInput{
 		q_type: websocket.q_types.input,
@@ -63,7 +63,7 @@ const deploy_machines_form = websocket.Form{
 		max: 0,
 		sign: false,
 		symbol: 'cpu',
-		answer: '',
+		answer: 1,
 		},
 		websocket.QuestionInput{
 		q_type: websocket.q_types.input,
@@ -77,7 +77,7 @@ const deploy_machines_form = websocket.Form{
 		max: 0,
 		sign: false,
 		symbol: 'memory',
-		answer: '',
+		answer: 1024,
 		},
 		websocket.QuestionInput{
 		q_type: websocket.q_types.input,
@@ -91,7 +91,7 @@ const deploy_machines_form = websocket.Form{
 		max: 0,
 		sign: false,
 		symbol: 'root_fs',
-		answer: '',
+		answer: 1,
 		},
 		websocket.QuestionInput{
 		q_type: websocket.q_types.input,
@@ -105,7 +105,7 @@ const deploy_machines_form = websocket.Form{
 		max: 0,
 		sign: false,
 		symbol: 'flist',
-		answer: '',
+		answer: 'https://hub.grid.tf/tf-official-apps/threefoldtech-ubuntu-20.04.flist',
 		},
 		websocket.QuestionInput{
 		q_type: websocket.q_types.input,
@@ -119,7 +119,7 @@ const deploy_machines_form = websocket.Form{
 		max: 0,
 		sign: false,
 		symbol: 'entrypoint',
-		answer: '',
+		answer: '/init.sh',
 		},
 		websocket.QuestionInput{
 		q_type: websocket.q_types.input,
