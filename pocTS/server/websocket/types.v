@@ -7,11 +7,6 @@ struct Choice {
   title string
 }
 
-struct Log {
-	id int
-	msg string
-}
-
 struct Response {
   event string
   log string

@@ -1,4 +1,4 @@
-module main
+module config
 
 import vweb
 import json
@@ -13,19 +13,17 @@ struct Config {
 	sec string
 }
 
-fn main() {
-
+pub fn serve() {
 	mut app := &App{}
 	vweb.run(app, 5001)
-
 }
 
 ['/profile_config'; get]
 pub fn (mut app App) profile_config() vweb.Result {
     config := Config{
-		net: "dev"
-		mne: "mom picnic deliver again rug night rabbit music motion hole lion where"
-		sec: "secret"
+		net: $env('NET')
+		mne: $env('MNE')
+		sec: $env('SEC')
 	}
     res := json.encode(config)
 
