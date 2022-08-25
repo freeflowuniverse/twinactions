@@ -6,11 +6,6 @@ import term
 import json
 import x.json2
 
-
-__global (
-	id=0
-)
-
 fn echo(mut client tw.TwinClient, log Response)? {
 	// print in server
 	println(log.log)

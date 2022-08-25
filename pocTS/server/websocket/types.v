@@ -37,7 +37,8 @@ type QType = string
 
 struct QuestionInput {
   q_type QType
-  id int
+  chat_id string
+  id string
   question string
   descr string
   returntype string
@@ -55,7 +56,7 @@ struct QuestionYn {
   q_type QType
   chat_id string
   question string
-  id int
+  id string
   symbol string
 
   answer Any
@@ -64,7 +65,8 @@ struct QuestionYn {
 struct QuestionChoice {
   q_type QType
   question string
-  id int
+  chat_id string
+  id string
   descr string
   sorted bool
   choices []Choice
@@ -78,7 +80,8 @@ struct QuestionChoice {
 struct QuestionDropdown {
   q_type QType
   question string
-  id int
+  chat_id string
+  id string
   descr string
   sorted bool
   choices []Choice
@@ -91,7 +94,8 @@ struct QuestionDropdown {
 
 struct QuestionDate {
   q_type QType
-  id int
+  chat_id string
+  id string
   question string
   symbol string
 
@@ -102,7 +106,7 @@ struct Form {
   q_type QType
   question string
   chat_id string
-  id int
+  id string
   description string
   form []Questions
   sign bool
