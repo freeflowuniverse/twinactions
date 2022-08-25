@@ -1,7 +1,7 @@
 module websocket
 
 const deploy_machines_form = websocket.Form{
-	q_type: websocket.q_types.form,
+	q_type: "form",
 	question: '# Deploy a Virtual Machine',
 	chat_id: get_id(),
 	id: get_id(),
@@ -9,7 +9,7 @@ const deploy_machines_form = websocket.Form{
 	form: [
 		websocket.QuestionInput{
 			chat_id: get_id(),
-			q_type: websocket.q_types.input,
+			q_type: "input",
 			id: get_id(),
 			question: '### What is the name of your VM?',
 			descr: 'VM Name',
@@ -23,7 +23,7 @@ const deploy_machines_form = websocket.Form{
 			answer: 'testvm',
 		},
 		websocket.QuestionInput{
-			q_type: websocket.q_types.input,
+			q_type: "input",
 			chat_id: get_id(),
 			id: get_id(),
 			question: '### Node ID',
@@ -38,7 +38,7 @@ const deploy_machines_form = websocket.Form{
 			answer: '11',
 		},
 		websocket.QuestionYn{
-			q_type: websocket.q_types.yn,
+			q_type: "yn",
 			chat_id: get_id(),
 			id: get_id(),
 			question: '### Public Ip',
@@ -46,7 +46,7 @@ const deploy_machines_form = websocket.Form{
 			answer: false,
 		},
 		websocket.QuestionYn{
-			q_type: websocket.q_types.yn,
+			q_type: "yn",
 			chat_id: get_id(),
 			id: get_id(),
 			question: '### Planetry Ip',
@@ -54,7 +54,7 @@ const deploy_machines_form = websocket.Form{
 			answer: true,
 		},
 		websocket.QuestionInput{
-			q_type: websocket.q_types.input,
+			q_type: "input",
 			chat_id: get_id(),
 			id: get_id(),
 			question: '### CPU Cores',
@@ -69,7 +69,7 @@ const deploy_machines_form = websocket.Form{
 			answer: 1,
 		},
 		websocket.QuestionInput{
-			q_type: websocket.q_types.input,
+			q_type: "input",
 			chat_id: get_id(),
 			id: get_id(),
 			question: '### Memory in MB',
@@ -84,7 +84,7 @@ const deploy_machines_form = websocket.Form{
 			answer: 1024,
 		},
 		websocket.QuestionInput{
-			q_type: websocket.q_types.input,
+			q_type: "input",
 			chat_id: get_id(),
 			id: get_id(),
 			question: '### Root FS in GB',
@@ -99,7 +99,7 @@ const deploy_machines_form = websocket.Form{
 			answer: 1,
 		},
 		websocket.QuestionInput{
-			q_type: websocket.q_types.input,
+			q_type: "input",
 			chat_id: get_id(),
 			id: get_id(),
 			question: '### Flist',
@@ -114,7 +114,7 @@ const deploy_machines_form = websocket.Form{
 			answer: 'https://hub.grid.tf/tf-official-apps/threefoldtech-ubuntu-20.04.flist',
 		},
 		websocket.QuestionInput{
-			q_type: websocket.q_types.input,
+			q_type: "input",
 			chat_id: get_id(),
 			id: get_id(),
 			question: '### Entrypoint',
@@ -129,7 +129,7 @@ const deploy_machines_form = websocket.Form{
 			answer: '/init.sh',
 		},
 		websocket.QuestionInput{
-			q_type: websocket.q_types.input,
+			q_type: "input",
 			chat_id: get_id(),
 			id: get_id(),
 			question: '### SSH Key',
@@ -150,7 +150,7 @@ const deploy_machines_form = websocket.Form{
 }
 
 const list_services_question = QuestionChoice{
-  q_type: q_types.choices,
+  q_type: "choices",
   question: "Choose a services",
   chat_id: get_id(),
   id: get_id()

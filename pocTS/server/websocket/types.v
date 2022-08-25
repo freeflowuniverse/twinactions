@@ -17,26 +17,26 @@ struct Response {
   Questions Types
 */
 
-pub struct QTypes {
-pub:
-  form string = "form"
-  input string = "input"
-  menu string = "menu"
-  yn string = "yn"
-  data string = "data"
-  choices string = "choices"
-}
+// pub struct QTypes {
+// pub:
+//   form string = "form"
+//   input string = "input"
+//   menu string = "menu"
+//   yn string = "yn"
+//   data string = "data"
+//   choices string = "choices"
+// }
 
-pub const q_types = QTypes{}
+// pub const q_types = QTypes{}
 
-type QType = string
+// type QType = string
 
 /*
   Questions Models
 */
 
 struct QuestionInput {
-  q_type QType
+  q_type string
   chat_id string
   id string
   question string
@@ -53,7 +53,7 @@ struct QuestionInput {
 }
 
 struct QuestionYn {
-  q_type QType
+  q_type string
   chat_id string
   question string
   id string
@@ -63,7 +63,7 @@ struct QuestionYn {
 }
 
 struct QuestionChoice {
-  q_type QType
+  q_type string
   question string
   chat_id string
   id string
@@ -78,7 +78,7 @@ struct QuestionChoice {
 }
 
 struct QuestionDropdown {
-  q_type QType
+  q_type string
   question string
   chat_id string
   id string
@@ -93,7 +93,7 @@ struct QuestionDropdown {
 }
 
 struct QuestionDate {
-  q_type QType
+  q_type string
   chat_id string
   id string
   question string
@@ -103,7 +103,7 @@ struct QuestionDate {
 }
 
 struct Form {
-  q_type QType
+  q_type string
   question string
   chat_id string
   id string
