@@ -23,7 +23,7 @@ pub fn (mut app App) profile_config() vweb.Result {
     config := Config{
 		net: $env('NET')
 		mne: $env('MNE')
-		sec: $env('SEC')
+		sec: $env('MNE')
 	}
     res := json.encode(config)
 

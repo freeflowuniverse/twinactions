@@ -1,18 +1,18 @@
 # Servers
 
-1. Uncommnet the servers you want to run in `main.v`
+## flow1server.v
 
-   - `websocket`: start a websocket server on port `8081`.
-   - `config`: start http server on port `5001` with endpoint `/profile_config` that returns your config from envars.
-      ```bash
+Allows initiliazing grid client from the browser (the user enters the mnemonics, network, .. etc)
+
+
+
+## flow2server.v
+
+Allows initilaizing the grid client from the V server backend (the server starts with the suitable environment of `NET` and `MNE` and it sends it to the web browser to initialize the grid client
+
+```
       # Required Environment Variables
       NET= # it can be one of (dev, qa, test, main)
-      MNE= # your mnemonics for your tfchain twin
-      SEC= # secret
-      ```
-   - `statics`: start http server on port `5000` serves build files of the chatbot from `./statics/public` directory.
-
-2. Run the `main.v`
-   ```bash
-   v run main.v
-   ```
+      MNE= # your mnemonics for your tfchain twin and used for kvstor secret
+      
+```
