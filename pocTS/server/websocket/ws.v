@@ -15,47 +15,8 @@ fn echo(mut client tw.TwinClient, log Response)? {
 	client.ws.write_string(payload)?
 }
 
-fn deployvm(mut client tw.TwinClient, vm map[string]json2.Any) {
-			vm_name := vm["vm_name"] or {
-				println("Couldn't get vm_name")
-				return
-			}
-			node_id := vm["node_id"] or {
-				println("Couldn't get node_id")
-				return
-			}
-			public_ip := vm["public_ip"] or {
-				println("Couldn't get public_ip")
-				return
-			}
-			planetary := vm["planetary_ip"] or {
-				println("Couldn't get planetary")
-				return
-			}
-			cpu := vm["cpu"] or {
-				println("Couldn't get cpu")
-				return
-			}
-			memory := vm["memory"] or {
-				println("Couldn't get memory")
-				return
-			}
-			rootfs_size := vm["root_fs"] or {
-				println("Couldn't get rootfs_size")
-				return
-			}
-			flist := vm["flist"] or {
-				println("Couldn't get flist")
-				return
-			}
-			entrypoint := vm["entrypoint"] or {
-				println("Couldn't get entrypoint")
-				return
-			}
-			ssh_key := vm["ssh_key"] or {
-				println("Couldn't get ssh_key")
-				return
-			}
+fn deployvm(mut client tw.TwinClient, vm_name, node_id, cpu, memory, rootfs_size, public_ip, planetary, flist, entrypoint, ssh_key json2.Any) {
+			
 
 
 			machines := tw.MachinesModel{
@@ -256,7 +217,48 @@ fn handle_events(raw_msg &tw.RawMessage, mut c ws.Client)? {
 		data := json2.raw_decode(msg.data)?
 		vm := data.as_map()
 
-		go deployvm(mut &client, vm)
+		vm_name := vm["vm_name"] or {
+				println("Couldn't get vm_name")
+				return
+			}
+			node_id := vm["node_id"] or {
+				println("Couldn't get node_id")
+				return
+			}
+			public_ip := vm["public_ip"] or {
+				println("Couldn't get public_ip")
+				return
+			}
+			planetary := vm["planetary_ip"] or {
+				println("Couldn't get planetary")
+				return
+			}
+			cpu := vm["cpu"] or {
+				println("Couldn't get cpu")
+				return
+			}
+			memory := vm["memory"] or {
+				println("Couldn't get memory")
+				return
+			}
+			rootfs_size := vm["root_fs"] or {
+				println("Couldn't get rootfs_size")
+				return
+			}
+			flist := vm["flist"] or {
+				println("Couldn't get flist")
+				return
+			}
+			entrypoint := vm["entrypoint"] or {
+				println("Couldn't get entrypoint")
+				return
+			}
+			ssh_key := vm["ssh_key"] or {
+				println("Couldn't get ssh_key")
+				return
+			}
+
+		go deployvm(mut &client, vm_name, node_id, cpu, memory, rootfs_size, public_ip, planetary, flist, entrypoint, ssh_key)
 
 
 
