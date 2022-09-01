@@ -15,6 +15,127 @@ fn echo(mut client tw.TwinClient, log Response)? {
 	client.ws.write_string(payload)?
 }
 
+fn deployvm(mut client tw.TwinClient, vm map[string]json2.Any) {
+			vm_name := vm["vm_name"] or {
+				println("Couldn't get vm_name")
+				return
+			}
+			node_id := vm["node_id"] or {
+				println("Couldn't get node_id")
+				return
+			}
+			public_ip := vm["public_ip"] or {
+				println("Couldn't get public_ip")
+				return
+			}
+			planetary := vm["planetary_ip"] or {
+				println("Couldn't get planetary")
+				return
+			}
+			cpu := vm["cpu"] or {
+				println("Couldn't get cpu")
+				return
+			}
+			memory := vm["memory"] or {
+				println("Couldn't get memory")
+				return
+			}
+			rootfs_size := vm["root_fs"] or {
+				println("Couldn't get rootfs_size")
+				return
+			}
+			flist := vm["flist"] or {
+				println("Couldn't get flist")
+				return
+			}
+			entrypoint := vm["entrypoint"] or {
+				println("Couldn't get entrypoint")
+				return
+			}
+			ssh_key := vm["ssh_key"] or {
+				println("Couldn't get ssh_key")
+				return
+			}
+
+
+			machines := tw.MachinesModel{
+				name: vm_name.str()
+				network: tw.Network{
+					ip_range: '10.200.0.0/16'
+					name: 'net3'
+					add_access: false
+					}
+				machines: [
+					tw.Machine{
+						name: vm_name.str()
+						node_id: node_id.str().u32()
+						disks: []
+						qsfs_disks: []
+						public_ip: public_ip.bool()
+						planetary: planetary.bool()
+						cpu: cpu.str().u32()
+						memory: memory.str().u64()
+						rootfs_size: rootfs_size.str().u64()
+						flist: flist.str()
+						entrypoint: entrypoint.str()
+						env: tw.Env{
+							ssh_key: ssh_key.str()
+						}
+					}
+				]
+			}
+		// machines := tw.MachinesModel{
+		// 	name: "tettttt"
+		// 	network: tw.Network{
+		// 		ip_range: '10.200.0.0/16'
+		// 		name: 'net4'
+		// 		add_access: false
+		// 		}
+		// 	machines: [
+		// 		tw.Machine{
+		// 			name: "tettttt"
+		// 			node_id: 27
+		// 			disks: []
+		// 			qsfs_disks: []
+		// 			public_ip: false
+		// 			planetary: true
+		// 			cpu: 1
+		// 			memory: 1024
+		// 			rootfs_size: 1
+		// 			flist: "https://hub.grid.tf/tf-official-apps/threefoldtech-ubuntu-20.04.flist"
+		// 			entrypoint: "/init.sh"
+		// 			env: tw.Env{
+		// 				ssh_key: "ff"
+		// 			}
+		// 		}
+		// 	]
+		// }
+
+		echo(mut client, Response{
+			event: "echo"
+			log: json.encode(machines)
+		}) or {
+			println("Couldn't echo machines")
+		}
+
+			response := client.machines_deploy(machines) or {
+				println("Couldn't deploy a vm")
+				return
+			}
+
+			deployment_info := client.machines_get("tettttt") or {
+				println("Coudn't get vm")
+				return
+			}
+			echo(mut client, Response{
+				event: "echo"
+				log: json.encode(deployment_info)
+			}) or {
+				println("Couldn't echo")
+			}
+   
+}
+
 pub fn serve()?{
 	mut s := ws.new_server(.ip6, 8081, '/')
 
@@ -135,43 +256,9 @@ fn handle_events(raw_msg &tw.RawMessage, mut c ws.Client)? {
 		data := json2.raw_decode(msg.data)?
 		vm := data.as_map()
 
-		machines := tw.MachinesModel{
-			name: vm["vm_name"]?.str()
-			network: tw.Network{
-				ip_range: '10.200.0.0/16'
-				name: 'net3'
-				add_access: false
-				}
-			machines: [
-				tw.Machine{
-					name: vm["vm_name"]?.str()
-					node_id: vm["node_id"]?.str().u32()
-					disks: []
-					qsfs_disks: []
-					public_ip: vm["public_ip"]?.bool()
-					planetary: vm["planetry_ip"]?.bool()
-					cpu: vm["cpu"]?.str().u32()
-					memory: vm["memory"]?.str().u64()
-					rootfs_size: vm["root_fs"]?.str().u64()
-					flist: vm["flist"]?.str()
-					entrypoint: vm["entrypoint"]?.str()
-					env: tw.Env{
-						ssh_key: vm["ssh_key"]?.str()
-					}
-				}
-			]
-		}
-		echo(mut client, Response{
-			event: "echo"
-			log: json.encode(machines)
-		})?
+		go deployvm(mut &client, vm)
 
-    	response := client.machines_deploy(machines)?
-		println('finished')
-		echo(mut client, Response{
-			event: "echo"
-			log: json.encode(response)
-		})?
+
 
 	} else if msg.event == "services_list" {
 		

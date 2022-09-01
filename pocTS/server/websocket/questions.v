@@ -50,7 +50,7 @@ const deploy_machines_form = websocket.Form{
 			chat_id: get_id(),
 			id: get_id(),
 			question: '### Planetry Ip',
-			symbol: 'planetry_ip',
+			symbol: 'planetary_ip',
 			answer: true,
 		},
 		websocket.QuestionInput{
