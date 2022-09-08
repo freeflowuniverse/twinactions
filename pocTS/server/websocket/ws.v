@@ -15,88 +15,6 @@ fn echo(mut client tw.TwinClient, log Response)? {
 	client.ws.write_string(payload)?
 }
 
-fn deployvm(mut client tw.TwinClient, vm_name, node_id, cpu, memory, rootfs_size, public_ip, planetary, flist, entrypoint, ssh_key json2.Any) {
-			
-
-
-			machines := tw.MachinesModel{
-				name: vm_name.str()
-				network: tw.Network{
-					ip_range: '10.200.0.0/16'
-					name: 'net3'
-					add_access: false
-					}
-				machines: [
-					tw.Machine{
-						name: vm_name.str()
-						node_id: node_id.str().u32()
-						disks: []
-						qsfs_disks: []
-						public_ip: public_ip.bool()
-						planetary: planetary.bool()
-						cpu: cpu.str().u32()
-						memory: memory.str().u64()
-						rootfs_size: rootfs_size.str().u64()
-						flist: flist.str()
-						entrypoint: entrypoint.str()
-						env: tw.Env{
-							ssh_key: ssh_key.str()
-						}
-					}
-				]
-			}
-		// machines := tw.MachinesModel{
-		// 	name: "tettttt"
-		// 	network: tw.Network{
-		// 		ip_range: '10.200.0.0/16'
-		// 		name: 'net4'
-		// 		add_access: false
-		// 		}
-		// 	machines: [
-		// 		tw.Machine{
-		// 			name: "tettttt"
-		// 			node_id: 27
-		// 			disks: []
-		// 			qsfs_disks: []
-		// 			public_ip: false
-		// 			planetary: true
-		// 			cpu: 1
-		// 			memory: 1024
-		// 			rootfs_size: 1
-		// 			flist: "https://hub.grid.tf/tf-official-apps/threefoldtech-ubuntu-20.04.flist"
-		// 			entrypoint: "/init.sh"
-		// 			env: tw.Env{
-		// 				ssh_key: "ff"
-		// 			}
-		// 		}
-		// 	]
-		// }
-
-		echo(mut client, Response{
-			event: "echo"
-			log: json.encode(machines)
-		}) or {
-			println("Couldn't echo machines")
-		}
-
-			response := client.machines_deploy(machines) or {
-				println("Couldn't deploy a vm")
-				return
-			}
-
-			deployment_info := client.machines_get("tettttt") or {
-				println("Coudn't get vm")
-				return
-			}
-			echo(mut client, Response{
-				event: "echo"
-				log: json.encode(deployment_info)
-			}) or {
-				println("Couldn't echo")
-			}
-   
-}
-
 pub fn serve()?{
 	mut s := ws.new_server(.ip6, 8081, '/')
 
@@ -125,8 +43,6 @@ pub fn serve()?{
 
 fn handle_events(raw_msg &tw.RawMessage, mut c ws.Client)? {
 
-	// println("got a raw msg: $raw_msg.payload $raw_msg.opcode")
-
 	mut client := tw.init_client(mut c)
 
 	if raw_msg.payload.len == 0 {
@@ -142,67 +58,67 @@ fn handle_events(raw_msg &tw.RawMessage, mut c ws.Client)? {
 	if msg.event == 'client_connected'{
 		println(msg.event)
 
-	// } else if msg.event == "sum_balances" {
+	} else if msg.event == "sum_balances" {
 		
-	// 	// machine := tw.Machine{'test2411822',
-	// 	// 	2,
-	// 	// 	[], 
-	// 	// 	[], 
-	// 	// 	false, 
-	// 	// 	true, 
-	// 	// 	2, 
-	// 	// 	1024, 
-	// 	// 	1, 
-	// 	// 	"https://hub.grid.tf/tf-official-apps/base:latest.flist",
-	// 	// 	"/sbin/zinit init",
-	// 	// 	tw.Env{ssh_key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCa5srzZwh3ulajtY2EZ1SiPY1JNelcaP8O/FZqrnJi6OxAPijl0KzoNrzgemqxhAS/eIglBYbgQuw/Po15MtdMgXmfrtNgrZjQQtLxGFz5KmUbzawPGI7iRkN40LEo0y0hcGLV1G+YiNO+3YU7K5I+gos+04OUJe4HYjcp92nAEviqxa40po2f67KgP5xrZxaOpELZA/hIf1wCzCyTsdvu3k+hw1QlSTIso6WTcUw7LLssvxAs7JZ31kgx+L740xQJWsiVv/go3td0GuETfRSbfjBtOD/wIEHG5UtazOrR+8ukotqQ/ERWuyx1abaEKwro3fLunmjhfgDbnJYy7As1 ahmed@ahmed-Inspiron-3576"}
-	// 	// 	}
-	// 	// machines := tw.Machines {
-	// 	// 	"test2411822", tw.Network{
-	// 	// 		"10.20.0.0/16",
-	// 	// 		"test24",
-	// 	// 		false
-	// 	// 	},
-	// 	// 	[machine],
-	// 	// 	"",
-	// 	// 	""
-	// 	// }
-	// 	// response := client.import_wallet(name: "test241182", address: "", secret: "SACLKHTVC3K36GCW6EPN7DAXNLLWPWLSFDAMM4EV22KRF62JK342QISI")?
+		// machine := tw.Machine{'test2411822',
+		// 	2,
+		// 	[], 
+		// 	[], 
+		// 	false, 
+		// 	true, 
+		// 	2, 
+		// 	1024, 
+		// 	1, 
+		// 	"https://hub.grid.tf/tf-official-apps/base:latest.flist",
+		// 	"/sbin/zinit init",
+		// 	tw.Env{ssh_key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCa5srzZwh3ulajtY2EZ1SiPY1JNelcaP8O/FZqrnJi6OxAPijl0KzoNrzgemqxhAS/eIglBYbgQuw/Po15MtdMgXmfrtNgrZjQQtLxGFz5KmUbzawPGI7iRkN40LEo0y0hcGLV1G+YiNO+3YU7K5I+gos+04OUJe4HYjcp92nAEviqxa40po2f67KgP5xrZxaOpELZA/hIf1wCzCyTsdvu3k+hw1QlSTIso6WTcUw7LLssvxAs7JZ31kgx+L740xQJWsiVv/go3td0GuETfRSbfjBtOD/wIEHG5UtazOrR+8ukotqQ/ERWuyx1abaEKwro3fLunmjhfgDbnJYy7As1 ahmed@ahmed-Inspiron-3576"}
+		// 	}
+		// machines := tw.Machines {
+		// 	"test2411822", tw.Network{
+		// 		"10.20.0.0/16",
+		// 		"test24",
+		// 		false
+		// 	},
+		// 	[machine],
+		// 	"",
+		// 	""
+		// }
+		// response := client.import_wallet(name: "test241182", address: "", secret: "SACLKHTVC3K36GCW6EPN7DAXNLLWPWLSFDAMM4EV22KRF62JK342QISI")?
 
-	// 	// response := client.deploy_machines(machines)? 
-	// 	// println("address $response.address")
-	// 	// response2 := client.balance_by_name("test241182")?
-	// 	// println(response2[0].amount)
-	// 	// response3 := client.list_wallets()?
-	// 	// println(response3)
-	// 	go fn [mut client]() {
-	// 		addrs := [
-	// 		"5CoairYXspX6MHeAFaJ9Ki3Fsj2sFXVHf11ymPXcsWX5a7Mw",
-	// 		"5D8ByeiGwKJ5YiZZfKAduomE5fezcR4xMVEcwfTxYm67UBSE"
-	// 		]
-	// 		mut total := 0.0
-	// 		for addr in addrs {
-	// 			balance := client.get_balance(addr) or {
-	// 				println("couldn't get balance: $err")
-	// 				return
-	// 			}
+		// response := client.deploy_machines(machines)? 
+		// println("address $response.address")
+		// response2 := client.balance_by_name("test241182")?
+		// println(response2[0].amount)
+		// response3 := client.list_wallets()?
+		// println(response3)
+		// 	go fn [mut client]() {
+		// 		addrs := [
+		// 		"5CoairYXspX6MHeAFaJ9Ki3Fsj2sFXVHf11ymPXcsWX5a7Mw",
+		// 		"5D8ByeiGwKJ5YiZZfKAduomE5fezcR4xMVEcwfTxYm67UBSE"
+		// 		]
+		// 		mut total := 0.0
+		// 		for addr in addrs {
+		// 			balance := client.get_balance(addr) or {
+		// 				println("couldn't get balance: $err")
+		// 				return
+		// 			}
 
-	// 			total += balance.free
-	// 		}
-	// 		// here we decided to send the result back
-	// 		// but we can do anything with this result
-	// 		resp_msg := tw.Message{
-	// 			id: "anyidforresponse" // any id for resp
-	// 			event: "balance_result"
-	// 			data: json.encode(total)
-	// 		}
+		// 			total += balance.free
+		// 		}
+		// 		// here we decided to send the result back
+		// 		// but we can do anything with this result
+		// 		resp_msg := tw.Message{
+		// 			id: "anyidforresponse" // any id for resp
+		// 			event: "balance_result"
+		// 			data: json.encode(total)
+		// 		}
 
-	// 		payload := json.encode(resp_msg)
-	// 		client.ws.write_string(payload) or {
-	// 			println("cannot send payload: $err")
-	// 			return
-	// 		}
-	// 	}()
+		// 		payload := json.encode(resp_msg)
+		// 		client.ws.write_string(payload) or {
+		// 			println("cannot send payload: $err")
+		// 			return
+		// 		}
+		// 	}()
 	} else if msg.event == "deploy_vm_form" {
 
 		res := Response{
@@ -217,7 +133,8 @@ fn handle_events(raw_msg &tw.RawMessage, mut c ws.Client)? {
 		data := json2.raw_decode(msg.data)?
 		vm := data.as_map()
 
-		vm_name := vm["vm_name"] or {
+		go fn [mut client, vm]() {
+			vm_name := vm["vm_name"] or {
 				println("Couldn't get vm_name")
 				return
 			}
@@ -258,10 +175,66 @@ fn handle_events(raw_msg &tw.RawMessage, mut c ws.Client)? {
 				return
 			}
 
-		go deployvm(mut &client, vm_name, node_id, cpu, memory, rootfs_size, public_ip, planetary, flist, entrypoint, ssh_key)
 
+			machines := tw.MachinesModel{
+				name: vm_name.str()
+				network: tw.Network{
+					ip_range: '10.200.0.0/16'
+					name: 'net3'
+					add_access: false
+					}
+				machines: [
+					tw.Machine{
+						name: vm_name.str()
+						node_id: node_id.str().u32()
+						disks: []
+						qsfs_disks: []
+						public_ip: public_ip.bool()
+						planetary: planetary.bool()
+						cpu: cpu.str().u32()
+						memory: memory.str().u64()
+						rootfs_size: rootfs_size.str().u64()
+						flist: flist.str()
+						entrypoint: entrypoint.str()
+						env: tw.Env{
+							ssh_key: ssh_key.str()
+						}
+					}
+				]
+			}
 
+			echo(mut client, Response{
+				event: "echo"
+				log: json.encode(machines)
+			}) or {
+				println("Couldn't echo machines")
+			}
 
+			response := client.machines_deploy(machines) or {
+				println("Couldn't deploy a vm")
+				return
+			}
+
+			echo(mut client, Response{
+				event: "echo"
+				log: json.encode(response)
+			}) or {
+				println("Couldn't echo")
+			}
+
+			deployment_info := client.machines_get(vm_name.str()) or {
+				println("Coudn't get vm")
+				return
+			}
+
+			echo(mut client, Response{
+				event: "echo"
+				log: json.encode(deployment_info)
+			}) or {
+				println("Couldn't echo")
+			}
+
+		}()
 	} else if msg.event == "services_list" {
 		
 		res := Response{
