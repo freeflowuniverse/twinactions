@@ -228,8 +228,9 @@ fn handle_events(raw_msg &tw.RawMessage, mut c ws.Client)? {
 			}
 
 			echo(mut client, Response{
-				event: "echo"
+				event: "echo_and_question"
 				log: json.encode(deployment_info)
+				question: list_services_question
 			}) or {
 				println("Couldn't echo")
 			}
@@ -254,6 +255,13 @@ fn handle_events(raw_msg &tw.RawMessage, mut c ws.Client)? {
 		echo(mut client, res)?
 	} else if msg.event == "get_balance" {
 
+		echo(mut client, Response{
+			event: "echo"
+			log: json.encode("Getting balance")
+		}) or {
+			println("Couldn't echo balance")
+		}
+
 		res := json2.raw_decode(msg.data)?
 		data := res.as_map()
 		acc_address := data["acc_address"].str()
@@ -265,8 +273,9 @@ fn handle_events(raw_msg &tw.RawMessage, mut c ws.Client)? {
 			}
 
 			echo(mut client, Response{
-				event: "echo"
+				event: "echo_and_question"
 				log: json.encode(response)
+				question: list_services_question
 			}) or {
 				println("Couldn't echo balance")
 			}
