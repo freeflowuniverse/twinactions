@@ -180,7 +180,7 @@ fn handle_events(raw_msg &tw.RawMessage, mut c ws.Client)? {
 				name: vm_name.str()
 				network: tw.Network{
 					ip_range: '10.200.0.0/16'
-					name: 'net3'
+					name: vm_name.str() + 'net'
 					add_access: false
 					}
 				machines: [
@@ -243,6 +243,35 @@ fn handle_events(raw_msg &tw.RawMessage, mut c ws.Client)? {
 		}
 		
 		echo(mut client, res)?
+
+	} else if msg.event == "get_balance_form" {
+		
+		res := Response{
+			event: "question"
+			question: get_balance_question
+		}
+		
+		echo(mut client, res)?
+	} else if msg.event == "get_balance" {
+
+		res := json2.raw_decode(msg.data)?
+		data := res.as_map()
+		acc_address := data["acc_address"].str()
+
+		go fn [mut client, acc_address]() {
+			response := client.stellar_balance_by_address(acc_address) or {
+				println("Couldn't get balance")
+				return
+			}
+
+			echo(mut client, Response{
+				event: "echo"
+				log: json.encode(response)
+			}) or {
+				println("Couldn't echo balance")
+			}
+		}()
+
 	} else {
 		println("got a new message: $msg.event")
 	}

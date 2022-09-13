@@ -162,8 +162,8 @@ const list_services_question = QuestionChoice{
 		title: "Deploy VM",
 	},
 	Choice{
-		value: "ping",
-		title: "Ping",
+		value: "get_balance_form",
+		title: "Get Balance",
 	}
   ]
   multi: false,
@@ -171,4 +171,20 @@ const list_services_question = QuestionChoice{
   symbol: "service",
 
   answer: "",
+}
+
+const get_balance_question = QuestionInput{
+	chat_id: get_id(),
+	q_type: "input",
+	id: get_id(),
+	question: '### Write account address',
+	descr: 'Account Address',
+	returntype: 'string',
+	regex: '.*',
+	regex_errormsg: '',
+	min: 0,
+	max: 0,
+	sign: false,
+	symbol: 'acc_address',
+	answer: '',
 }
