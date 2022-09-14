@@ -322,7 +322,139 @@ fn handle_events(raw_msg &tw.RawMessage, mut c ws.Client)? {
 				println("Couldn't echo twin")
 			}
 		}()
+	} else if msg.event == "deploy_k8s_question" {
 
+		res := Response{
+			event: "question"
+			question: deploy_k8s_form
+		}
+		
+		echo(mut client, res)?
+	
+	} else if msg.event == "deploy_k8s" {
+		
+		data := json2.raw_decode(msg.data)?
+		k8s := data.as_map()
+
+		go fn [mut client, k8s]() {
+			cluster_name := k8s["cluster_name"] or {
+				println("Couldn't get cluster_name")
+				return
+			}
+			node_id := k8s["node_id"] or {
+				println("Couldn't get node_id")
+				return
+			}
+			public_ip := k8s["public_ip"] or {
+				println("Couldn't get public_ip")
+				return
+			}
+			planetary := k8s["planetary_ip"] or {
+				println("Couldn't get planetary")
+				return
+			}
+			cpu := k8s["cpu"] or {
+				println("Couldn't get cpu")
+				return
+			}
+			memory := k8s["memory"] or {
+				println("Couldn't get memory")
+				return
+			}
+			rootfs_size := k8s["root_fs"] or {
+				println("Couldn't get rootfs_size")
+				return
+			}
+			ssh_key := k8s["ssh_key"] or {
+				println("Couldn't get ssh_key")
+				return
+			}
+			mr_number := k8s["mr_number"] or {
+				println("Couldn't get mr_number")
+				return
+			}
+			wr_number := k8s["wr_number"] or {
+				println("Couldn't get wr_number")
+				return
+			}
+
+			mut mr_nodes_list := []tw.KubernetesNode{}
+			mut wr_nodes_list := []tw.KubernetesNode{}
+			
+			for i in 0..mr_number.str().int() {
+				mr_node := tw.KubernetesNode{
+					name: "mr" + i.str()
+					node_id: node_id.str().u32()
+					cpu: cpu.str().u32()
+					memory: memory.str().u32()
+					rootfs_size: rootfs_size.str().u32()
+					disk_size: 50
+					public_ip: public_ip.str().bool()
+					planetary: planetary.str().bool()
+				}
+				mr_nodes_list << mr_node
+			}
+
+			for i in 0..wr_number.str().int() {
+				wr_node := tw.KubernetesNode{
+					name: "wr" + i.str()
+					node_id: node_id.str().u32()
+					cpu: cpu.str().u32()
+					memory: memory.str().u32()
+					rootfs_size: rootfs_size.str().u32()
+					disk_size: 50
+					public_ip: public_ip.str().bool()
+					planetary: planetary.str().bool()
+				}
+				wr_nodes_list << wr_node
+			}
+
+			cluster := tw.K8SModel{
+				name: cluster_name.str()
+				secret: "secret"
+				ssh_key: ssh_key.str()
+				network: tw.Network{
+					ip_range: '10.200.0.0/16'
+					name: cluster_name.str() + 'net'
+					add_access: false
+					}
+				masters: mr_nodes_list
+				workers: wr_nodes_list
+			}
+
+			// echo(mut client, Response{
+			// 	event: "echo"
+			// 	log: json.encode(cluster)
+			// }) or {
+			// 	println("Couldn't echo machines")
+			// }
+
+			response := client.kubernetes_deploy(cluster) or {
+				println("Couldn't deploy a cluster")
+				return
+			}
+
+			echo(mut client, Response{
+				event: "echo"
+				log: json.encode(response)
+			}) or {
+				println("Couldn't echo")
+			}
+
+			deployment_info := client.kubernetes_get(cluster_name.str()) or {
+				println("Coudn't get cluster")
+				return
+			}
+
+			echo(mut client, Response{
+				event: "echo_and_question"
+				log: json.encode(deployment_info)
+				question: list_services_question
+			}) or {
+				println("Couldn't echo")
+			}
+
+		}()
 	} else {
 		println("got a new message: $msg.event")
 	}
