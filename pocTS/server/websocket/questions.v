@@ -165,6 +165,10 @@ const list_services_question = QuestionChoice{
 		value: "get_balance_form",
 		title: "Get Balance",
 	}
+	Choice{
+		value: "get_twin_question",
+		title: "Get Twin by ID",
+	}
   ]
   multi: false,
   sign: false,
@@ -186,5 +190,21 @@ const get_balance_question = QuestionInput{
 	max: 0,
 	sign: false,
 	symbol: 'acc_address',
+	answer: '',
+}
+
+const get_twin_question = QuestionInput{
+	chat_id: get_id(),
+	q_type: "input",
+	id: get_id(),
+	question: '### Write twin id',
+	descr: 'Account Address',
+	returntype: 'string',
+	regex: '.*',
+	regex_errormsg: '',
+	min: 0,
+	max: 0,
+	sign: false,
+	symbol: 'twin_id',
 	answer: '',
 }

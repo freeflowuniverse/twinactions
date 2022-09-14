@@ -263,8 +263,11 @@ fn handle_events(raw_msg &tw.RawMessage, mut c ws.Client)? {
 		}
 
 		res := json2.raw_decode(msg.data)?
-		data := res.as_map()
-		acc_address := data["acc_address"].str()
+		data := res.as_map()["acc_address"] or {
+			println("Couldn't find acc_address in response")
+			return 
+		}
+		acc_address := data.str()
 
 		go fn [mut client, acc_address]() {
 			response := client.stellar_balance_by_address(acc_address) or {
@@ -278,6 +281,45 @@ fn handle_events(raw_msg &tw.RawMessage, mut c ws.Client)? {
 				question: list_services_question
 			}) or {
 				println("Couldn't echo balance")
+			}
+		}()
+
+	} else if msg.event == "get_twin_question" {
+		
+		res := Response{
+			event: "question"
+			question: get_twin_question
+		}
+		
+		echo(mut client, res)?
+	} else if msg.event == "get_twin" {
+
+		echo(mut client, Response{
+			event: "echo"
+			log: json.encode("Getting Twin")
+		}) or {
+			println("Couldn't echo twin")
+		}
+
+		res := json2.raw_decode(msg.data)?
+		data := res.as_map()["twin_id"] or {
+			println("Couldn't find twin_id in response")
+			return 
+		}
+		twin_id := data.str().u32()
+
+		go fn [mut client, twin_id]() {
+			response := client.twins_get(twin_id) or {
+				println("Couldn't get twin_id")
+				return
+			}
+
+			echo(mut client, Response{
+				event: "echo_and_question"
+				log: json.encode(response)
+				question: list_services_question
+			}) or {
+				println("Couldn't echo twin")
 			}
 		}()
 
