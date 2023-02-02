@@ -1,5 +1,8 @@
 <template>
   <div id="app">
+    <br/>
+    <br/>
+    <h4 style="text-align:center">A simple v-grid client to interact with the grid3-ts client.</h4>
     <form @submit.prevent="onSubmit()">
       <div>
         <label>
@@ -19,16 +22,10 @@
 
       <br />
 
-      <div>
-        <label>
-          <p>Balance sum</p>
-          <input type="text" placeholder="..." v-model="balance" />
-        </label>
-      </div>
-
+      <button type="submit">Algorand List</button>
       <br />
-
-      <button type="submit">Sum balances</button>
+      <br />
+      <small>Check the console to see the response</small>
     </form>
   </div>
 </template>
@@ -39,19 +36,12 @@ import { Component, Vue } from "vue-property-decorator";
 interface IMessage {
   id: string;
   event: string;
-  data: string;
+  dat: string;
 }
 
 interface IInvokeRequest {
   function: string;
   args: string;
-}
-
-interface IBalanceResult {
-  free: number;
-  reserved: number;
-  miscFrozen: number;
-  feeFrozen: number;
 }
 
 @Component({
@@ -61,7 +51,6 @@ export default class App extends Vue {
   mnemonic = "";
   secret = "";
   loading = false;
-  balance = 0.0;
 
   async onSubmit() {
     this.loading = true;
@@ -69,10 +58,10 @@ export default class App extends Vue {
     const grid = await this.$grid(mnemonic, secret);
     const socket = await this.$socket();
     socket.send(
-      JSON.stringify({ event: "client_connected", data: `{ "id": 12 }` })
+      JSON.stringify({ event: "client_connected", data: `{ id: 12 }` })
     );
     socket.send(
-      JSON.stringify({ event: "sum_balances", data: `{ "id": 12 }` })
+      JSON.stringify({ event: "algorand_list", data: `{}` })
     );
 
     this.loading = false;
@@ -86,15 +75,9 @@ export default class App extends Vue {
       console.log(data);
 
       if (data.event == "invoke") {
-        const req = JSON.parse(data.data) as IInvokeRequest;
+        const req = JSON.parse(data.dat) as IInvokeRequest;
         const grid = await this.$grid(this.mnemonic, this.secret);
         const result = await grid.invoke(req.function, JSON.parse(req.args));
-        // const result = {
-        //   free: 1.2,
-        //   reserved: 87.3,
-        //   miscFrozen: 2323.32,
-        //   feeFrozen: 23232.3232,
-        // };
 
         socket.send(
           JSON.stringify({
@@ -105,9 +88,6 @@ export default class App extends Vue {
         );
 
         console.log("result sent: ", result);
-      } else if (data.event == "balance_result") {
-        const result = JSON.parse(data.data) as number;
-        this.balance = result;
       }
     };
   }
